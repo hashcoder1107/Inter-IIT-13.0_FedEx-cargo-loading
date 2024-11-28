@@ -1,0 +1,1 @@
+// VECTOR<ULD>,VECTOR<PACKAGE> -> SOLUTION.CPP -> OUTPUT -> of class output.h
