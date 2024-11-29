@@ -1,17 +1,22 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define init 0
 #ifndef PACKAGE_H
 #define PACKAGE_H
 
-class packages{
-    public:
-    int identifier, length, width, height, weight, delayCost;
-    bool priority;
+#include <bits/stdc++.h>
+using namespace std;
 
-    packages(){
-        identifier=init, length=init; width=init; height=init; weight=init; delayCost=init;
-        priority=false;
+class PACKAGE{
+    public:
+    int packageIdentifier, length, width, height, weight, delayCost;
+    bool priority; // Indicates whether package is of type priority or economy. 1 -> Priority and 0 -> Economy
+
+    PACKAGE(int packageIdentifier, int length, int width, int height, int weight, int delayCost, bool priority){
+        this->packageIdentifier = packageIdentifier;
+        this->length = length;
+        this->width = width;
+        this->height = height;
+        this->weight = weight;
+        this->priority = priority;
+        this->delayCost = delayCost;
     }
 };
 

@@ -2,12 +2,25 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
+
 
 class OUTPUT{
 public:
-    vector<int> bottomLeft, topRight; // these vectors store the coordinates of two diagonally opposite corners of the package
+    vector<OUTPUT_ROW> outputRows;
+
+    OUTPUT(int totalPackages){
+        outputRows.resize(totalPackages);
+    }
+};
+
+class OUTPUT_ROW{
+public:
+    // These vectors store the coordinates of two diagonally opposite corners of the package
+    vector<int> bottomLeft; // This is the coordinate which will be closer to (0, 0, 0) (that is origin of the ULD) 
+    vector<int> topRight; // This is the coordinate which is diagonally opposite to bottomLeft
+
     int uldNumber, packageNumber; // These are the package number and uldNumber in which the package is stored
 
     // Constructor definition
@@ -20,7 +33,7 @@ public:
     void updateOutput();
 };
 
-void OUTPUT::updateOutput(vector<int> bottomLeft, vector<int> topRight, int uldNumber){
+void OUTPUT_ROW::updateOutput(vector<int> bottomLeft, vector<int> topRight, int uldNumber){
     this->bottomLeft = bottomLeft;
     this->topright = topRight;
     this->uldNumber = uldNumber;
