@@ -81,7 +81,7 @@ bool boundaryCheck(vector<ULD>& uldInfo, OUTPUT& solnOutput){
         }        
 
         if(solnOutput.outputRows[index].topRight[0] < 0 || solnOutput.outputRows[index].topRight[1] < 0 || solnOutput.outputRows[index].topRight[2] < 0){
-            cout<<"bottomLeft of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the bottomLeft End "<<ULDNumber<<endl;
+            cout<<"topRight of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the bottomLeft End "<<ULDNumber<<endl;
             boundaryFlag&=false;
             return boundaryFlag;
         }
