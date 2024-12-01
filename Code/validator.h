@@ -63,25 +63,25 @@ bool boundaryCheck(vector<ULD>& uldInfo, OUTPUT& solnOutput){
         ULDTopRight[2]=uldInfo[ULDNumber].height;
 
         if(solnOutput.outputRows[index].bottomLeft[0] < 0 || solnOutput.outputRows[index].bottomLeft[1] < 0 || solnOutput.outputRows[index].bottomLeft[2] < 0){
-            cout<<"bottomLeft of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the bottomLeft End "<<ULDNumber<<endl;
+            cout<<"bottomLeft of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the bottomLeft end of ULD "<<ULDNumber<<endl;
             boundaryFlag&=false;
             return boundaryFlag;
         }
 
         if(solnOutput.outputRows[index].bottomLeft[0] > ULDTopRight[0] || solnOutput.outputRows[index].bottomLeft[1] > ULDTopRight[1] || solnOutput.outputRows[index].bottomLeft[2] > ULDTopRight[2]){
-            cout<<"bottomLeft of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the topRight End "<<ULDNumber<<endl;
+            cout<<"bottomLeft of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the topRight end of ULD "<<ULDNumber<<endl;
             boundaryFlag&=false;
             return boundaryFlag;
         }
 
         if(solnOutput.outputRows[index].topRight[0]>ULDTopRight[0] || solnOutput.outputRows[index].topRight[1]>ULDTopRight[1] || solnOutput.outputRows[index].topRight[2]>ULDTopRight[2]){
-            cout<<"topRight of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the topRight End "<<ULDNumber<<endl;
+            cout<<"topRight of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the topRight end of ULD "<<ULDNumber<<endl;
             boundaryFlag&=false;
             return boundaryFlag;
         }        
 
         if(solnOutput.outputRows[index].topRight[0] < 0 || solnOutput.outputRows[index].topRight[1] < 0 || solnOutput.outputRows[index].topRight[2] < 0){
-            cout<<"topRight of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the bottomLeft End "<<ULDNumber<<endl;
+            cout<<"topRight of package "<<solnOutput.outputRows[index].packageNumber<<" is outside ULD to the bottomLeft end of ULD "<<ULDNumber<<endl;
             boundaryFlag&=false;
             return boundaryFlag;
         }
