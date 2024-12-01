@@ -137,11 +137,11 @@ bool weightCheck(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& so
         uldWeights[solnOutput.outputRows[index].uldNumber]+=packagesInfo[solnOutput.outputRows[index].packageNumber].weight;
     }
 
-    set<int> uldsWeightLimitExceeded;
+    vector<int> uldsWeightLimitExceeded;
 
     for(int i=1;i<uldInfo.size();i++){
         if(uldWeights[uldInfo[i].uldIdentifier]>uldInfo[i].weightLimit){
-            uldsWeightLimitExceeded.insert(uldInfo[i].uldIdentifier);
+            uldsWeightLimitExceeded.push_back(uldInfo[i].uldIdentifier);
         }
     }
 
@@ -150,8 +150,8 @@ bool weightCheck(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& so
     }
 
     cout<<"ULDs where weight limits were crossed are: ";
-    for(auto it:uldsWeightLimitExceeded){
-        cout<<it<<" ";
+    for(auto uldIdentifier:uldsWeightLimitExceeded){
+        cout<<uldIdentifier<<" ";
     }
     cout<<endl;
 
@@ -160,7 +160,6 @@ bool weightCheck(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& so
 
 int costFunction(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& solnOutput,int &k){
     vector<bool> hasPriority(uldInfo.size(),false);
-    int totalCost=0;
 
     int index=1;
     int costDueToEconomy=0;
@@ -168,7 +167,6 @@ int costFunction(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& so
         costDueToEconomy+=packagesInfo[solnOutput.outputRows[index].packageNumber].delayCost;
         index++;
     }
-    totalCost+=costDueToEconomy;
 
     for(index;index<solnOutput.outputRows.size();index++){
         if(packagesInfo[solnOutput.outputRows[index].packageNumber].priority){
@@ -184,11 +182,10 @@ int costFunction(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& so
     }
 
     int costDueToPriority=(k*ULDsHavingPriorityPackages);
-    totalCost+=costDueToPriority;
-    return totalCost;
+    return costDueToEconomy+costDueToPriority;
 }
 
-int validate(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& solnOutput,int &k){
+void validate(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& solnOutput,int &k){
     vector<vector<vector<int>>> uldBaseMatrix;
     initialise(uldBaseMatrix, uldInfo);
 
@@ -198,8 +195,6 @@ int validate(vector<ULD>& uldInfo, vector<PACKAGE>& packagesInfo, OUTPUT& solnOu
         cout<<"Given solution passes all 4 parameters"<<endl;
         cout<<"Total Cost is: "<<costFunction(uldInfo,packagesInfo,solnOutput,k)<<endl;
     }
-
-    return 0;
 }
 
 #endif
