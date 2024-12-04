@@ -1,4 +1,7 @@
 from ortools.sat.python import cp_model
+import csv
+import pandas as pd
+import time
 
 class BinPacking:
   def __init__(self, n, m, l, w, h, wt, K, cost, priority, L, W, H, C):
@@ -89,6 +92,7 @@ class BinPacking:
     # Retrieve variables (Ensure `create_variables` is called before this method)
     p, prio, x, y, z, _x, _y, _z, x_a, x_b, y_a, y_b, z_a, z_b, r = variables
 
+    model.Add(sum(sum(p[i][j] for j in range(m))*priority[i] for i in range(n))==sum(priority))
     for i in range(n):
       model.Add(sum(p[i][j] for j in range(m)) <= 1)
 
@@ -149,6 +153,17 @@ class BinPacking:
 
     # Use solver with specified parameters
     status = solver.Solve(model)
+    if status==cp_model.OPTIMAL:
+      print("OPTIMAL")
+    elif status==cp_model.FEASIBLE:
+      print("FEASIBLE")
+    elif status==cp_model.INFEASIBLE:
+      print("INFEASIBLE")
+    elif status==cp_model.MODEL_INVALID:
+      print("MODEL_INVALID")
+    else:
+      print("UNKNOWN")
+    
 
     # Retrieve the objective value
     objective = solver.ObjectiveValue()
@@ -168,26 +183,65 @@ class BinPacking:
 
 def bin_packing(n, m, l, w, h, wt, K, cost, priority, L, W, H, C):
   problem = BinPacking(n, m, l, w, h, wt, K, cost, priority, L, W, H, C)
-  problem.set_time_limit = 10.0
+  problem.set_time_limit(300)
   return problem.solve()
 
 def main():
-  n = 5
-  m = 1
+  start_time = time.time()
+  # Open the input CSV file
+  with open("../Input/input.csv", "r") as file:
+      lines = file.readlines()
 
-  l = [1] * (n-1) + [9]
-  w = [1] * (n-1) + [9]
-  h = [1] * (n-1) + [9]
-  wt = [1, 1, 1, 1, 1]
-  
-  K = 100
-  cost = [100, 100, 50, 50, 1e6]
-  priority = [0, 0, 0, 0, 1]
+  # Read the first line which contains K
+  K = int(lines[0].strip())
 
-  L = [10] * m
-  W = [9] * m
-  H = [9] * m
-  C = [3] * m
+  # Prepare lists for ULD and Package data
+  uld_data = []
+  package_data = []
+
+  # Read the rest of the lines
+  for line in lines[1:]:
+      # Strip any leading/trailing whitespace and split by commas
+      parts = line.strip().split(',')
+      
+      # Check if the line starts with "U" (ULD data)
+      if parts[0].startswith("U"):
+          uld_data.append(parts)
+      # Check if the line starts with "P" (Package data)
+      elif parts[0].startswith("P"):
+          package_data.append(parts)
+
+  # Convert ULD data into DataFrame with the appropriate column names
+  uld_data_df = pd.DataFrame(uld_data, columns=["ULDID", "Length", "Width", "Height", "Weight Limit"])
+
+  # Convert Package data into DataFrame with the appropriate column names
+  package_data_df = pd.DataFrame(package_data, columns=["PackageID", "Length", "Width", "Height", "Weight", "Priority/Economy", "Cost of Delay"])
+
+  # Display the parsed data (for debugging purposes)
+  print("ULD Data:")
+  print(uld_data_df)
+  print("\nPackage Data:")
+  print(package_data_df)
+
+  # Convert the data to numeric arrays
+  L = pd.to_numeric(uld_data_df['Length'], errors='coerce').to_numpy()  # Convert to NumPy array
+  W = pd.to_numeric(uld_data_df['Width'], errors='coerce').to_numpy()
+  H = pd.to_numeric(uld_data_df['Height'], errors='coerce').to_numpy()
+  C = pd.to_numeric(uld_data_df['Weight Limit'], errors='coerce').to_numpy()
+
+  l = pd.to_numeric(package_data_df['Length'], errors='coerce').to_numpy()
+  w = pd.to_numeric(package_data_df['Width'], errors='coerce').to_numpy()
+  h = pd.to_numeric(package_data_df['Height'], errors='coerce').to_numpy()
+  wt = pd.to_numeric(package_data_df['Weight'], errors='coerce').to_numpy()
+  cost = pd.to_numeric(package_data_df['Cost of Delay'].replace({'-': int(1e8)}), errors='coerce').to_numpy()
+  priority = pd.to_numeric(package_data_df['Priority/Economy'].replace({'Priority': 1, 'Economy': 0}), errors='coerce').to_numpy()
+
+  n=len(l)
+  m=len(L)
+
+  # print(L,W,H,C)
+  # print(l,w,h,wt,cost,priority)
+  # print(K)
 
   (status, 
   objective, 
@@ -209,5 +263,13 @@ def main():
   print("cord:")
   for i in range(n):
     print(i,":", x_assignment[i], y_assignment[i], z_assignment[i])
+
+  # Record end time
+  end_time = time.time()
+
+  # Calculate elapsed time
+  elapsed_time = end_time - start_time
+
+  print(f"Elapsed time: {elapsed_time} seconds")
 
 main()
