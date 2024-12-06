@@ -30,6 +30,7 @@ public:
         this->packageNumber = 0; // The package Number is updated for the package whose output is begin created.
     }
     void updateOutput(vector<int> bottomLeft, vector<int> topRight, int uldNumber);
+    void updateOutput(tuple<int,int,int> bottomLeft, tuple<int,int,int> topRight, int uldNumber);
 };
 
 class OUTPUT
@@ -41,6 +42,18 @@ public:
     {
         outputRows.resize(totalPackages);
     }
+
+    void print()
+    {
+        for(auto row:outputRows)
+        {
+            cout<<"Package Id : "<<row.packageNumber<<"\n";
+            cout<<"Uld Id : "<<row.uldNumber<<"\n";
+            cout<<"Start Point : "<<row.bottomLeft[0]<<","<<row.bottomLeft[1]<<","<<row.bottomLeft[2]<<"\n";
+            cout<<"End Point : "<<row.topRight[0]<<","<<row.topRight[1]<<","<<row.topRight[2]<<"\n";
+            cout<<"\n";
+        }
+    }
 };
 
 void OUTPUT_ROW::updateOutput(vector<int> bottomLeft, vector<int> topRight, int uldNumber)
@@ -48,6 +61,13 @@ void OUTPUT_ROW::updateOutput(vector<int> bottomLeft, vector<int> topRight, int 
     this->bottomLeft = bottomLeft;
     this->topRight = topRight;
     this->uldNumber = uldNumber;
+}
+
+void OUTPUT_ROW::updateOutput(tuple<int,int,int> bottomLeft, tuple<int,int,int> topRight, int uldNumber)
+{
+    vector<int> vectorBL = {get<0>(bottomLeft),get<1>(bottomLeft),get<2>(bottomLeft)};
+    vector<int> vectorTR = {get<0>(topRight),get<1>(topRight),get<2>(topRight)};
+    updateOutput(vectorBL,vectorTR,uldNumber);
 }
 
 #endif

@@ -10,10 +10,12 @@
 #include "output.h"
 #include "parser.h"
 #include "validator.h"
+#include "SegmentTree.h"
 using namespace std;
 
 #define INF 1e9
 #define ALPHA 5587.836
+#define BETA 5975.6536
 
 void print2(tuple<int,int,int> t,int x){
     cout<<get<0>(t)-x<<",";
@@ -132,15 +134,28 @@ int main()
 
     parseInput(k, packages, ulds); // Parsing input
 
+    OUTPUT output(packages.size());
+    for(auto p:packages){
+        output.outputRows[p.packageIdentifier] = OUTPUT_ROW(p.packageIdentifier);
+    }
+
     packages.erase(packages.begin());
     ulds.erase(ulds.begin());
     vector<bool> containsPriority(ulds.size(),0);
 
-    OUTPUT sampleOutput(packages.size());
-
     // Bottom Top Fill Heuristic
 
-    // Sort
+    // Sort ULDs
+
+    function<double(int,int)> ULDCmp = [&](int volume,int weight){
+        return volume/BETA+weight;
+    };
+
+    sort(ulds.begin(),ulds.end(),[&](ULD u1,ULD u2){
+        return ULDCmp(u1.length*u1.width*u1.height,u1.weightLimit) > ULDCmp(u2.length*u2.width*u2.height,u2.weightLimit);
+    });
+
+    // Sort Packages
 
     function<double(int,int)> priorityCmp = [&](int volume,int weight){
         return volume/ALPHA+weight;
@@ -171,8 +186,6 @@ int main()
     }
 
     for(auto p:packages){
-        cout<<p.packageIdentifier<<" : "<<p.priority<<endl;
-        continue;
         bool packageTaken = false;
         for(auto &matrix:v){
             pair<tuple<int,int,int>,tuple<int,int,int>> validInsertionPoint = matrix.findValidInsertionPoint(p);
@@ -190,6 +203,8 @@ int main()
                     containsPriority[matrix.getULDIdentifier()-1]=1;
 
                 matrix.fitPackage(validInsertionPoint.first,validInsertionPoint.second,p.weight);
+
+                output.outputRows[p.packageIdentifier].updateOutput(validInsertionPoint.first,validInsertionPoint.second,matrix.getULDIdentifier());
                 break;
             }
         }
@@ -210,8 +225,11 @@ int main()
 
     // Validate Output
 
-    // validate(ulds, packages, sampleOutput, k); // Validating output
-
+    PACKAGE dummyPackage;
+    ULD dummyULD;
+    packages.insert(packages.begin(),dummyPackage);
+    ulds.insert(ulds.begin(),dummyULD);
+    validate(ulds, packages, output, k); // Validating output
 
     return 0;
 }

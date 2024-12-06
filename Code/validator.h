@@ -121,9 +121,9 @@ bool overlapCheck(vector<ULD> &uldInfo, vector<vector<vector<int>>> &uldBaseMatr
 
         int supportAvailable = 0;
 
-        for (int i = bottomLeft[0]; i <= topRight[0]; i++)
+        for (int i = bottomLeft[0]; i < topRight[0]; i++)
         {
-            for (int j = bottomLeft[1]; j <= topRight[1]; j++)
+            for (int j = bottomLeft[1]; j < topRight[1]; j++)
             {
                 if (uldBaseMatrix[uldNumber][j][i] > bottomLeft[2])
                 {
@@ -137,12 +137,12 @@ bool overlapCheck(vector<ULD> &uldInfo, vector<vector<vector<int>>> &uldBaseMatr
             }
         }
 
-        double percentageSupport = (((double)supportAvailable) / ((topRight[0] - bottomLeft[0] + 1) * (topRight[1] - bottomLeft[1] + 1))) * 100;
-        cout << "Package Number " << packageNumber << " has a support of " << percentageSupport << " % " << endl;
+        double percentageSupport = (((double)supportAvailable) / ((topRight[0] - bottomLeft[0]) * (topRight[1] - bottomLeft[1]))) * 100;
+        // cout << "Package Number " << packageNumber << " has a support of " << percentageSupport << " % " << endl;
 
-        for (int i = bottomLeft[0]; i <= topRight[0]; i++)
+        for (int i = bottomLeft[0]; i < topRight[0]; i++)
         {
-            for (int j = bottomLeft[1]; j <= topRight[1]; j++)
+            for (int j = bottomLeft[1]; j < topRight[1]; j++)
             {
                 uldBaseMatrix[uldNumber][j][i] = topRight[2];
             }
@@ -230,6 +230,8 @@ void validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, OUTPUT &solnO
     initialise(uldBaseMatrix, uldInfo);
 
     sort(solnOutput.outputRows.begin(), solnOutput.outputRows.end(), comparator); // sorted using manual comparator
+
+    solnOutput.print();
 
     if (allPriorityPackagesTaken(packagesInfo, solnOutput) && boundaryCheck(uldInfo, solnOutput) && overlapCheck(uldInfo, uldBaseMatrix, solnOutput) && weightCheck(uldInfo, packagesInfo, solnOutput))
     {
