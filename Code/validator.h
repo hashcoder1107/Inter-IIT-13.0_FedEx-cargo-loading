@@ -69,35 +69,35 @@ bool boundaryCheck(vector<ULD> &uldInfo, OUTPUT &solnOutput)
         vector<int> ULDBottomLeft(3, 0);
         vector<int> ULDTopRight(3, 0);
 
-        int ULDNumber = solnOutput.outputRows[index-1].uldNumber;
+        int ULDNumber = solnOutput.outputRows[index - 1].uldNumber;
         ULDTopRight[0] = uldInfo[ULDNumber].length;
         ULDTopRight[1] = uldInfo[ULDNumber].width;
         ULDTopRight[2] = uldInfo[ULDNumber].height;
 
-        if (solnOutput.outputRows[index-1].bottomLeft[0] < 0 || solnOutput.outputRows[index-1].bottomLeft[1] < 0 || solnOutput.outputRows[index-1].bottomLeft[2] < 0)
+        if (solnOutput.outputRows[index - 1].bottomLeft[0] < 0 || solnOutput.outputRows[index - 1].bottomLeft[1] < 0 || solnOutput.outputRows[index - 1].bottomLeft[2] < 0)
         {
-            cout << "bottomLeft of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
+            cout << "bottomLeft of package " << solnOutput.outputRows[index - 1].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
 
-        if (solnOutput.outputRows[index-1].bottomLeft[0] > ULDTopRight[0] || solnOutput.outputRows[index-1].bottomLeft[1] > ULDTopRight[1] || solnOutput.outputRows[index-1].bottomLeft[2] > ULDTopRight[2])
+        if (solnOutput.outputRows[index - 1].bottomLeft[0] > ULDTopRight[0] || solnOutput.outputRows[index - 1].bottomLeft[1] > ULDTopRight[1] || solnOutput.outputRows[index - 1].bottomLeft[2] > ULDTopRight[2])
         {
-            cout << "bottomLeft of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
+            cout << "bottomLeft of package " << solnOutput.outputRows[index - 1].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
 
-        if (solnOutput.outputRows[index-1].topRight[0] > ULDTopRight[0] || solnOutput.outputRows[index-1].topRight[1] > ULDTopRight[1] || solnOutput.outputRows[index-1].topRight[2] > ULDTopRight[2])
+        if (solnOutput.outputRows[index - 1].topRight[0] > ULDTopRight[0] || solnOutput.outputRows[index - 1].topRight[1] > ULDTopRight[1] || solnOutput.outputRows[index - 1].topRight[2] > ULDTopRight[2])
         {
-            cout << "topRight of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
+            cout << "topRight of package " << solnOutput.outputRows[index - 1].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
 
-        if (solnOutput.outputRows[index-1].topRight[0] < 0 || solnOutput.outputRows[index-1].topRight[1] < 0 || solnOutput.outputRows[index-1].topRight[2] < 0)
+        if (solnOutput.outputRows[index - 1].topRight[0] < 0 || solnOutput.outputRows[index - 1].topRight[1] < 0 || solnOutput.outputRows[index - 1].topRight[2] < 0)
         {
-            cout << "topRight of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
+            cout << "topRight of package " << solnOutput.outputRows[index - 1].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
@@ -223,20 +223,94 @@ int costFunction(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, OUTPUT &so
     return costDueToEconomy + costDueToPriority;
 }
 
-void validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, OUTPUT &solnOutput, int &k)
+bool validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol, int &k)
 {
-    vector<vector<vector<int>>> uldBaseMatrix;
-    initialise(uldBaseMatrix, uldInfo);
-
-    sort(solnOutput.outputRows.begin(), solnOutput.outputRows.end(), comparator); // sorted using manual comparator
-
-    solnOutput.print();
-
-    if (allPriorityPackagesTaken(packagesInfo, solnOutput) && boundaryCheck(uldInfo, solnOutput) && overlapCheck(uldInfo, uldBaseMatrix, solnOutput) && weightCheck(uldInfo, packagesInfo, solnOutput))
+    int numUld = uldInfo.size();
+    int mxUldDim = 0;
+    for (auto uld : uldInfo)
     {
-        cout << "Given solution passes all 4 parameters" << endl;
-        cout << "Total Cost is: " << costFunction(uldInfo, packagesInfo, solnOutput, k) << endl;
+        if (uld.uldIdentifier)
+        {
+            mxUldDim = max({mxUldDim, uld.height, uld.width, uld.length});
+        }
     }
+
+    vector<vector<vector<int>>> table(numUld, vector<vector<int>>(mxUldDim, vector<int>(mxUldDim, -1)));
+    map<int, int> uldWeightSum;
+
+    auto _packages = sol.getPackages();
+    auto packages = vector<pair<int, AssignedPackage>>(_packages.begin(), _packages.end());
+
+    sort(packages.begin(), packages.end(), [&](pair<int, AssignedPackage> left, pair<int, AssignedPackage> right)
+         {
+            auto [x1, y1, z1] = left.second.bottomLeft;
+            auto [x2, y2, z2] = right.second.topRight;
+            return z1 < z2; });
+
+    for (auto [_, package] : sol.getPackages())
+    {
+        int uldId = package.assignedUld;
+        if (uldId == -1)
+        {
+            if (package.isPriority)
+            {
+                cout << "Unused Priority: " << package.packageId << endl;
+                return false;
+            }
+            continue;
+        }
+
+        ULD assignedUld;
+        for (auto uld : uldInfo)
+        {
+            if (uld.uldIdentifier == uldId)
+                assignedUld = uld;
+        }
+
+        // Weight
+        uldWeightSum[uldId] += package.weight;
+        if (uldWeightSum[uldId] > assignedUld.weightLimit)
+        {
+            cout << "Weight Limit: " << uldId << ' ' << uldWeightSum[uldId] << endl;
+            return false;
+        }
+
+        // Volume
+        auto [x1, y1, z1] = package.bottomLeft;
+        auto [x2, y2, z2] = package.topRight;
+
+        for (int i = x1; i < x2; i++)
+        {
+            for (int j = y1; j < y2; j++)
+            {
+                if (table[uldId][i][j] >= z1)
+                {
+                    cout << "Overlap: " << package.packageId << endl;
+                    return false;
+                }
+                else
+                {
+                    table[uldId][i][j] = z2;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    return true;
+    // vector<vector<vector<int>>> uldBaseMatrix;
+    // initialise(uldBaseMatrix, uldInfo);
+
+    // sort(solnOutput.outputRows.begin(), solnOutput.outputRows.end(), comparator); // sorted using manual comparator
+
+    // solnOutput.print();
+
+    // if (allPriorityPackagesTaken(packagesInfo, solnOutput) && boundaryCheck(uldInfo, solnOutput) && overlapCheck(uldInfo, uldBaseMatrix, solnOutput) && weightCheck(uldInfo, packagesInfo, solnOutput))
+    // {
+    //     cout << "Given solution passes all 4 parameters" << endl;
+    //     cout << "Total Cost is: " << costFunction(uldInfo, packagesInfo, solnOutput, k) << endl;
+    // }
 }
 
 #endif
