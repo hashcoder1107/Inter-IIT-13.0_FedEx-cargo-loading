@@ -92,7 +92,7 @@ class BinPacking:
     # Retrieve variables (Ensure `create_variables` is called before this method)
     p, prio, x, y, z, _x, _y, _z, x_a, x_b, y_a, y_b, z_a, z_b, r = variables
 
-    model.Add(sum(sum(p[i][j] for j in range(m))*priority[i] for i in range(n))==sum(priority))
+    #model.Add(sum(sum(p[i][j] for j in range(m))*priority[i] for i in range(n))==sum(priority))
     for i in range(n):
       model.Add(sum(p[i][j] for j in range(m)) <= 1)
 
@@ -177,20 +177,24 @@ class BinPacking:
     # Extract the values of the r array (3D assignment variable)
     r_assignment = [[[solver.Value(r[i][j][k]) for k in range(3)] for j in range(3)] for i in range(n)]
 
+    for j in range(m):
+      sum=0
+      for i in range(n):
+        sum=sum+solver.Value(p[i][j])
+      print(f"Number of packages in ULD {j+1} is {sum}") 
+    
     # Return the status, objective value, and the variable assignments
     return status, objective, p_assignment, x_assignment, y_assignment, z_assignment, r_assignment
 
 
 def bin_packing(n, m, l, w, h, wt, K, cost, priority, L, W, H, C):
   problem = BinPacking(n, m, l, w, h, wt, K, cost, priority, L, W, H, C)
-  problem.set_time_limit(300)
+  problem.set_time_limit(1000)
   return problem.solve()
 
-def main():
-  start_time = time.time()
-  # Open the input CSV file
+def parser():
   with open("../Input/input.csv", "r") as file:
-      lines = file.readlines()
+    lines = file.readlines()
 
   # Read the first line which contains K
   K = int(lines[0].strip())
@@ -218,10 +222,10 @@ def main():
   package_data_df = pd.DataFrame(package_data, columns=["PackageID", "Length", "Width", "Height", "Weight", "Priority/Economy", "Cost of Delay"])
 
   # Display the parsed data (for debugging purposes)
-  print("ULD Data:")
-  print(uld_data_df)
-  print("\nPackage Data:")
-  print(package_data_df)
+  # print("ULD Data:")
+  # print(uld_data_df)
+  # print("\nPackage Data:")
+  # print(package_data_df)
 
   # Convert the data to numeric arrays
   L = pd.to_numeric(uld_data_df['Length'], errors='coerce').to_numpy()  # Convert to NumPy array
@@ -239,9 +243,55 @@ def main():
   n=len(l)
   m=len(L)
 
+  return n, m, l, w, h, wt, K, cost, priority, L, W, H, C
+
+def main():
+  start_time = time.time()
+  # Open the input CSV file
+
+  # wt.sort()
+  # weight=0
+  # volume=0
+  # for i in range(n):
+  #   weight=weight+wt[i]
+  #   volume=volume+(l[i]*w[i]*h[i])
+  
+  # print(volume)
+  # print(weight)
+
+  # print(f"Total package weight is {(weight*100)/volume}% of total volume")
+  # weightULD=0
+  # volumeULD=0
+  # for i in range(m):
+  #   weightULD=weightULD+C[i]
+  #   volumeULD=volumeULD+(L[i]*W[i]*H[i])  
+
+  # print(volumeULD)
+  # print(weightULD)
+
+  # print(f"Total ULD weight is {(weightULD*100)/volumeULD}% of total ULD volume")
+  # print(f"Total package weight is {(weight*100)/weightULD}% of total ULD weight")
+  # print(f"Total package volume is {(volume*100)/volumeULD}% of total ULD volume")
+
+  # weight=0
+  # volume=0
+  # for i in range(n):
+  #   weight=weight+(wt[i]*priority[i])
+  #   volume=volume+((l[i]*w[i]*h[i])*priority[i])
+  
+  # print(volume)
+  # print(weight)
+
+  # print(f"Total priority package weight is {(weight*100)/weightULD}% of total ULD weight")
+  # print(f"Total priority package volume is {(volume*100)/volumeULD}% of total ULD volume")
+
+
+  #print(weight)
   # print(L,W,H,C)
   # print(l,w,h,wt,cost,priority)
   # print(K)
+
+  n, m, l, w, h, wt, K, cost, priority, L, W, H, C = parser()
 
   (status, 
   objective, 
