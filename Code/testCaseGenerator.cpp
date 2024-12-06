@@ -12,15 +12,15 @@ void generateK(ofstream &outputFile,int minK,int maxK)
     outputFile << k << endl << endl;
 }
 
-void generateULDs(ofstream &outputFile, int numUld, int maxUldDimension, int maxUldWeight)
+void generateULDs(ofstream &outputFile, int numUld, int minUldDimension, int maxUldDimension, int minUldWeight, int maxUldWeight)
 {
     // Generating random values for all ULD length,breadth and height parameters , in range [1,maxUldDimension] , and range [1,maxUldWeight] for maximum weight limit parameter
     for (int uldIdentifier = 1; uldIdentifier <= numUld; uldIdentifier++)
     {
-        int uldLength = (rand() % maxUldDimension) + 1;
-        int uldWidth = (rand() % maxUldDimension) + 1;
-        int uldHeight = (rand() % maxUldDimension) + 1;
-        int uldWeightLimit = (rand() % maxUldWeight) + 1;
+        int uldLength = (rand() % (maxUldDimension - minUldDimension + 1)) + minUldDimension;
+        int uldWidth = (rand() % (maxUldDimension - minUldDimension + 1)) + minUldDimension;
+        int uldHeight = (rand() % (maxUldDimension - minUldDimension + 1)) + minUldDimension;
+        int uldWeightLimit = (rand() % (maxUldWeight - minUldWeight + 1)) + minUldWeight;
 
         outputFile << "U" << uldIdentifier << "," << uldLength << "," << uldWidth << "," << uldHeight << "," << uldWeightLimit << endl;
     }
@@ -28,17 +28,17 @@ void generateULDs(ofstream &outputFile, int numUld, int maxUldDimension, int max
     outputFile << endl;
 }
 
-void generatePackages(ofstream &outputFile, int numPackage, int maxPackageDimension, int maxPackageWeight, int numPriorityPackage , int minCost, int maxCost)
+void generatePackages(ofstream &outputFile, int numPackage, int minPackageDimension, int maxPackageDimension, int minPackageWeight, int maxPackageWeight, int numPriorityPackage , int minCost, int maxCost)
 {
     // Generating random values for all Package length,breadth and height parameters , in range [1,maxUldDimension] , and range [1,maxPackageWeight] for package weight parameter
 
     int priorityCounter = 0;
     for (int packageIdentifier = 1; packageIdentifier <= numPackage; packageIdentifier++)
     {
-        int packageLength = (rand() % maxPackageDimension) + 1;
-        int packageWidth = (rand() % maxPackageDimension) + 1;
-        int packageHeight = (rand() % maxPackageDimension) + 1;
-        int packageWeight = (rand() % maxPackageWeight) + 1;
+        int packageLength = (rand() % (maxPackageDimension - minPackageDimension + 1)) + minPackageDimension;
+        int packageWidth = (rand() % (maxPackageDimension - minPackageDimension + 1)) + minPackageDimension;
+        int packageHeight = (rand() % (maxPackageDimension - minPackageDimension + 1)) + minPackageDimension;
+        int packageWeight = (rand() % (maxPackageWeight - minPackageWeight + 1)) + minPackageWeight;
 
         bool priority;
 
@@ -100,19 +100,26 @@ int main(int argc,char* argv[])
 
     int minK = atoi(argv[1]); // Min value of K
     int maxK = atoi(argv[2]); // Max value of K
+
     int numUld = atoi(argv[3]); // Number of ULDs
-    int maxUldDimension = atoi(argv[4]); // Max ULD Length/Width/height
-    int maxUldWeight = atoi(argv[5]); // Max ULD Weight
-    int numPackage = atoi(argv[6]); // Number of Packages
-    int maxPackageDimension = atoi(argv[7]); // Max Package Length/Width/height
-    int maxPackageWeight = atoi(argv[8]); // Max Package Weight
-    double priorityPercent = atof(argv[9]); // Desired percentage of priority packages
-    int minCost = atoi(argv[10]); // Minimum delay cost
-    int maxCost = atoi(argv[11]); // Maximum delay cost
+    int minUldDimension = atoi(argv[4]); // Min ULD Length/Width/height
+    int maxUldDimension = atoi(argv[5]); // Max ULD Length/Width/height
+    int minUldWeight = atoi(argv[6]); // Min ULD Weight
+    int maxUldWeight = atoi(argv[7]); // Max ULD Weight
+
+    int numPackage = atoi(argv[8]); // Number of Packages
+    int minPackageDimension = atoi(argv[9]); // Min Package Length/Width/height
+    int maxPackageDimension = atoi(argv[10]); // Max Package Length/Width/height
+    int minPackageWeight = atoi(argv[11]); // Min Package Weight
+    int maxPackageWeight = atoi(argv[12]); // Max Package Weight
+    double priorityPercent = atof(argv[13]); // Desired percentage of priority packages
+
+    int minCost = atoi(argv[14]); // Minimum delay cost
+    int maxCost = atoi(argv[15]); // Maximum delay cost
 
     generateK(outputFile,minK,maxK);
-    generateULDs(outputFile, numUld, maxUldDimension, maxUldWeight);
-    generatePackages(outputFile, numPackage, maxPackageDimension, maxPackageWeight, (int)(priorityPercent*numPackage), minCost, maxCost);
+    generateULDs(outputFile, numUld, minUldDimension, maxUldDimension, minUldWeight, maxUldWeight);
+    generatePackages(outputFile, numPackage, minPackageDimension, maxPackageDimension, minPackageWeight, maxPackageWeight, (int)(priorityPercent*numPackage), minCost, maxCost);
 
     outputFile.close(); // Close the file
 }
