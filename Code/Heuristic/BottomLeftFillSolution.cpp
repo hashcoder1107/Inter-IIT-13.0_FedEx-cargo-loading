@@ -8,7 +8,13 @@ using namespace std;
 
 int main()
 {
-    delayCost(ALPHA,BETA);
+    int k;
+    vector<PACKAGE> packages;
+    vector<ULD> ulds;
+
+    parseInput(k, packages, ulds);
+
+    delayCost(ALPHA,BETA,k, packages, ulds);
 
     return 0;
 }

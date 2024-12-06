@@ -16,8 +16,6 @@
 
 using namespace std;
 
-
-
 void print2(tuple<int,int,int> t,int x = 0){
     cout<<get<0>(t)-x<<",";
     cout<<get<1>(t)-x<<",";
@@ -134,14 +132,8 @@ class ULDBaseMatrix{
         }
 };
 
-long long delayCost(double a1,double b1)
+long long delayCost(double a1,double b1, int k, vector<PACKAGE> &packages, vector<ULD> &ulds)
 {
-    int k;
-    vector<PACKAGE> packages;
-    vector<ULD> ulds;
-
-    parseInput(k, packages, ulds); // Parsing input
-
     OUTPUT output(packages.size());
     for(auto p:packages){
         output.outputRows[p.packageIdentifier] = OUTPUT_ROW(p.packageIdentifier);
@@ -204,16 +196,16 @@ long long delayCost(double a1,double b1)
                 
                 // cout<<"Package "<<p.packageIdentifier<<" stored in ULD "<<matrix.getULDIdentifier()<<"\n";
                 // cout<<"Start point : ";
-                print2(validInsertionPoint.first,0);
+                // print2(validInsertionPoint.first,0);
                 // cout<<"End point : ";
-                print2(validInsertionPoint.second,0);
+                // print2(validInsertionPoint.second,0);
 
                 if(p.priority)
                     containsPriority[matrix.getULDIdentifier()-1]=1;
 
                 matrix.fitPackage(validInsertionPoint.first,validInsertionPoint.second,p.weight);
 
-                output.outputRows[p.packageIdentifier].updateOutput(validInsertionPoint.first,validInsertionPoint.second,matrix.getULDIdentifier());
+                // output.outputRows[p.packageIdentifier].updateOutput(validInsertionPoint.first,validInsertionPoint.second,matrix.getULDIdentifier());
                 break;
             }
         }
@@ -230,7 +222,7 @@ long long delayCost(double a1,double b1)
             costOfDelay+=k;
     }
 
-    cout<<"Cost of Delay : "<<costOfDelay<<"\n";
+    // cout<<"Cost of Delay : "<<costOfDelay<<"\n";
 
     // Validate Output
 
@@ -238,7 +230,7 @@ long long delayCost(double a1,double b1)
     ULD dummyULD;
     packages.insert(packages.begin(),dummyPackage);
     ulds.insert(ulds.begin(),dummyULD);
-    validate(ulds, packages, output, k); // Validating output
+    // validate(ulds, packages, output, k); // Validating output
 
     return costOfDelay;
 }
