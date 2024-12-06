@@ -182,16 +182,15 @@ long long delayCost(double a1,double b1)
         return randomPerc;
     };
 
-    cout<<getRandom(1)<<endl;
-    return 0;
-
     function<double(int,int)> priorityCmp = [&](int volume,int weight){
         // return volume/a1+weight;
-        return -volume;
+        // return -volume;
+        return getRandom(-volume);
     };
 
     function<double(int,int,int)> economyCmp = [&](int volume,int weight,int cost){
-        return (volume/a1+weight)/cost;
+        // return (volume/a1+weight)/cost;
+        return getRandom((volume/a1+weight)/cost);
     };
 
     sort(packages.begin(),packages.end(),[&](PACKAGE p1,PACKAGE p2){
