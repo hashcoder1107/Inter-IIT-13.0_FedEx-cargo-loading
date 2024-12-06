@@ -1,5 +1,5 @@
 #define INF 1e9
-#define ALPHA 5587.836
+#define ALPHA 7500
 #define BETA 5975.6536
 
 #include "BottomLeftFillSolution.h"
@@ -14,7 +14,8 @@ int main()
 
     parseInput(k, packages, ulds);
 
-    delayCost(ALPHA,BETA,k, packages, ulds);
+    int cost = delayCost(ALPHA,BETA,k, packages, ulds);
+    cout << cost << endl;
 
     return 0;
 }

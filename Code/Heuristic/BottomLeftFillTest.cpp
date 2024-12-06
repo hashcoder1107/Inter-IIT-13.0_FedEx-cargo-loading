@@ -9,15 +9,15 @@
 
 using namespace std;
 
-const int alpha_min = 5000;
-const int alpha_max = 6000;
-const int alpha_step = 500;
+const double alpha_min = 3500;
+const double alpha_max = 7500;
+const double alpha_step = 800;
 
-const int beta_min = 6000;
-const int beta_max = 6000;
-const int beta_step = 1000;
+const double beta_min = 5975.6536;
+const double beta_max = 5975.6536;
+const double beta_step = 1000;
 
-const int num_threads = 3;
+const int num_threads = 7;
 
 vector<vector<int>> res;
 
@@ -25,7 +25,7 @@ int k;
 vector<PACKAGE> packages;
 vector<ULD> ulds;
 
-void run(vector<int> alphas, vector<int> betas)
+void run(vector<double> alphas, vector<double> betas)
 {
   for (auto alpha : alphas)
   {
@@ -46,13 +46,13 @@ int main(int argc, char *argv[])
   parseInput(k, packages, ulds);
   // return 0;
 
-  vector<int> alphas;
+  vector<double> alphas;
   for (int i = alpha_min; i <= alpha_max; i += alpha_step)
   {
     alphas.push_back(i);
   }
 
-  vector<int> betas;
+  vector<double> betas;
   for (int i = beta_min; i <= beta_max; i += beta_step)
   {
     betas.push_back(i);
@@ -64,17 +64,23 @@ int main(int argc, char *argv[])
 
   vector<thread> threads;
 
-  vector<vector<int>> alphaSplit = {{}};
+  vector<vector<double>> alphaSplit = {{}};
+  int m = n_alpha % num_threads;
+  int t = 1;
+  cout << m << endl;
   for (auto x : alphas)
   {
-    if (alphaSplit.back().size() < (n_alpha + num_threads - 1) / num_threads)
+    cout << m << ' ' << t << endl;
+    if (alphaSplit.back().size() < (n_alpha) / num_threads + t)
     {
       alphaSplit.back().push_back(x);
     }
     else
     {
+      m--;
       alphaSplit.push_back({x});
     }
+    if(m == 0) t = 0;
   }
 
   for (auto &p_alphas : alphaSplit)
@@ -88,6 +94,8 @@ int main(int argc, char *argv[])
       run(p_alphas, betas);
     });
   }
+
+  cout << threads.size() << endl;
 
   for (int i = 0; i < num_threads; i++)
   {
