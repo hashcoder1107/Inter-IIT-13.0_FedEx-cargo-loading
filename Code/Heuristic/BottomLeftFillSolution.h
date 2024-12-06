@@ -166,7 +166,8 @@ long long delayCost(double a1,double b1)
     // Sort Packages
 
     function<double(int,int)> priorityCmp = [&](int volume,int weight){
-        return volume/a1+weight;
+        // return volume/a1+weight;
+        return -volume;
     };
 
     function<double(int,int,int)> economyCmp = [&](int volume,int weight,int cost){
@@ -203,9 +204,9 @@ long long delayCost(double a1,double b1)
                 
                 // cout<<"Package "<<p.packageIdentifier<<" stored in ULD "<<matrix.getULDIdentifier()<<"\n";
                 // cout<<"Start point : ";
-                // print2(validInsertionPoint.first,0);
+                print2(validInsertionPoint.first,0);
                 // cout<<"End point : ";
-                // print2(validInsertionPoint.second,0);
+                print2(validInsertionPoint.second,0);
 
                 if(p.priority)
                     containsPriority[matrix.getULDIdentifier()-1]=1;
@@ -229,7 +230,7 @@ long long delayCost(double a1,double b1)
             costOfDelay+=k;
     }
 
-    // cout<<"Cost of Delay : "<<costOfDelay<<"\n";
+    cout<<"Cost of Delay : "<<costOfDelay<<"\n";
 
     // Validate Output
 
