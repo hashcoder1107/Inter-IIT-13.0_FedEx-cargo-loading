@@ -57,7 +57,6 @@ bool allPriorityPackagesTaken(vector<PACKAGE> &packagesInfo, OUTPUT &solnOutput)
 
 bool boundaryCheck(vector<ULD> &uldInfo, OUTPUT &solnOutput)
 {
-
     bool boundaryFlag = true;
     int index = 1;
     while (index < solnOutput.outputRows.size() && solnOutput.outputRows[index].uldNumber == -1)
@@ -70,35 +69,35 @@ bool boundaryCheck(vector<ULD> &uldInfo, OUTPUT &solnOutput)
         vector<int> ULDBottomLeft(3, 0);
         vector<int> ULDTopRight(3, 0);
 
-        int ULDNumber = solnOutput.outputRows[index].uldNumber;
+        int ULDNumber = solnOutput.outputRows[index-1].uldNumber;
         ULDTopRight[0] = uldInfo[ULDNumber].length;
         ULDTopRight[1] = uldInfo[ULDNumber].width;
         ULDTopRight[2] = uldInfo[ULDNumber].height;
 
-        if (solnOutput.outputRows[index].bottomLeft[0] < 0 || solnOutput.outputRows[index].bottomLeft[1] < 0 || solnOutput.outputRows[index].bottomLeft[2] < 0)
+        if (solnOutput.outputRows[index-1].bottomLeft[0] < 0 || solnOutput.outputRows[index-1].bottomLeft[1] < 0 || solnOutput.outputRows[index-1].bottomLeft[2] < 0)
         {
-            cout << "bottomLeft of package " << solnOutput.outputRows[index].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
+            cout << "bottomLeft of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
 
-        if (solnOutput.outputRows[index].bottomLeft[0] > ULDTopRight[0] || solnOutput.outputRows[index].bottomLeft[1] > ULDTopRight[1] || solnOutput.outputRows[index].bottomLeft[2] > ULDTopRight[2])
+        if (solnOutput.outputRows[index-1].bottomLeft[0] > ULDTopRight[0] || solnOutput.outputRows[index-1].bottomLeft[1] > ULDTopRight[1] || solnOutput.outputRows[index-1].bottomLeft[2] > ULDTopRight[2])
         {
-            cout << "bottomLeft of package " << solnOutput.outputRows[index].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
+            cout << "bottomLeft of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
 
-        if (solnOutput.outputRows[index].topRight[0] > ULDTopRight[0] || solnOutput.outputRows[index].topRight[1] > ULDTopRight[1] || solnOutput.outputRows[index].topRight[2] > ULDTopRight[2])
+        if (solnOutput.outputRows[index-1].topRight[0] > ULDTopRight[0] || solnOutput.outputRows[index-1].topRight[1] > ULDTopRight[1] || solnOutput.outputRows[index-1].topRight[2] > ULDTopRight[2])
         {
-            cout << "topRight of package " << solnOutput.outputRows[index].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
+            cout << "topRight of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the topRight end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
 
-        if (solnOutput.outputRows[index].topRight[0] < 0 || solnOutput.outputRows[index].topRight[1] < 0 || solnOutput.outputRows[index].topRight[2] < 0)
+        if (solnOutput.outputRows[index-1].topRight[0] < 0 || solnOutput.outputRows[index-1].topRight[1] < 0 || solnOutput.outputRows[index-1].topRight[2] < 0)
         {
-            cout << "topRight of package " << solnOutput.outputRows[index].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
+            cout << "topRight of package " << solnOutput.outputRows[index-1].packageNumber << " is outside ULD to the bottomLeft end of ULD " << ULDNumber << endl;
             boundaryFlag &= false;
             return boundaryFlag;
         }
@@ -125,12 +124,12 @@ bool overlapCheck(vector<ULD> &uldInfo, vector<vector<vector<int>>> &uldBaseMatr
         {
             for (int j = bottomLeft[1]; j < topRight[1]; j++)
             {
-                if (uldBaseMatrix[uldNumber][j][i] > bottomLeft[2])
+                if (uldBaseMatrix[uldNumber][i][j] > bottomLeft[2])
                 {
                     cout << "Package Number " << packageNumber << " stored in ULD Number " << uldNumber << " is overlapping." << endl;
                     return false;
                 }
-                if (bottomLeft[2] == 0 || uldBaseMatrix[uldNumber][j][i] == bottomLeft[2])
+                if (bottomLeft[2] == 0 || uldBaseMatrix[uldNumber][i][j] == bottomLeft[2])
                 {
                     supportAvailable++;
                 }
@@ -144,7 +143,7 @@ bool overlapCheck(vector<ULD> &uldInfo, vector<vector<vector<int>>> &uldBaseMatr
         {
             for (int j = bottomLeft[1]; j < topRight[1]; j++)
             {
-                uldBaseMatrix[uldNumber][j][i] = topRight[2];
+                uldBaseMatrix[uldNumber][i][j] = topRight[2];
             }
         }
     }

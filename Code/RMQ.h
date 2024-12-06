@@ -1,11 +1,3 @@
-```
-// C++ code to implement the sparse table
-
-#include <bits/stdc++.h>
-using namespace std;
-
-const int N = 100;
-// int table[N][N][(int)(log2(N) + 1)][(int)(log2(N) + 1)];
 class RMQ2D {
   int n, m, lgn, lgm;
   // int matrix[N][N];
@@ -125,9 +117,9 @@ class RangeSum {
 
   int query(int x1, int y1, int x2, int y2) {
     int ans = table[x2][y2];
-    if(x1 && y1) ans += table[x1][y1];
-    if(x1) ans -= table[x1][y2];
-    if(y1) ans -= table[x2][y1];
+    if(x1 && y1) ans += table[x1-1][y1-1];
+    if(x1) ans -= table[x1-1][y2];
+    if(y1) ans -= table[x2][y1-1];
     return ans;
   }
 
@@ -144,56 +136,40 @@ class RangeSum {
   }
 };
 
-// Function to solve the queries
-void solve(int n, int m, vector<vector<int>> &matrix1, int q,
-           vector<int> queries[]) {
-  int i = 0;
-  vector<vector<int>> matrix(n, vector<int>(m, 0));
-  while(i < n) {
-    int j = 0;
-    while(j < m) {
-      matrix[i][j] = matrix1[i][j];
-      j++;
+class MaxSumQuery2D {
+  RangeSum range_sum;
+  MaxQuery2D range_max;
+  int n, m;
+
+  public:
+  void build(int _n, int _m, vector<vector<int>> &matrix) {
+    n = _n;
+    m = _m;
+    range_sum.build(n, m, matrix);
+    range_max.build_sparse_table(n, m, matrix);
+  } 
+
+  int sumQuery(int x1, int y1, int x2, int y2) {
+    return range_sum.query(x1, y1, x2, y2);
+  }
+
+  int maxQuery(int x1, int y1, int x2, int y2) {
+    return range_max.query(x1, y1, x2, y2);
+  }
+
+  void update(int x1, int y1, int val) {
+    range_sum.update(x1, y1, val);
+    range_max.update(x1, y1, val);
+  }
+
+  vector<vector<int>> getState() {
+    vector<vector<int>> state(n, vector<int>(m));
+    for(int i = 0; i < n; i++) {
+      for(int j = 0; j < m; j++) {
+        state[i][j] = sumQuery(i, j, i, j);
+      }
     }
-    i++;
+    return state;
   }
-  MaxQuery2D rmq;
-  rmq.build_sparse_table(n, m, matrix);
-  i = 0;
-  // cout << rmq.query(1, 1, 1, 1) << endl;
-  while(i < q) {
-    int x1, y1, x2, y2;
-    x1 = queries[i][0];
-    y1 = queries[i][1];
-    x2 = queries[i][2];
-    y2 = queries[i][3];
-    cout << rmq.query(x1, y1, x2, y2) << endl;
-    i++;
-  }
-  rmq.update(1, 2, 7);
-  i = 0;
-  while(i < q) {
-    int x1, y1, x2, y2;
-    x1 = queries[i][0];
-    y1 = queries[i][1];
-    x2 = queries[i][2];
-    y2 = queries[i][3];
-    cout << rmq.query(x1, y1, x2, y2) << endl;
-    i++;
-  }
-}
+};
 
-// Driver code
-int main() {
-  int N = 4, M = 4;
-  vector<vector<int>> matrix1
-    = {{5, 8, 2, 4}, {7, 2, 9, 1}, {1, 4, 7, 3}, {3, 5, 6, 8}};
-  int Q = 2;
-  vector<int> queries[] = {{0, 0, 3, 3}, {1, 1, 2, 2}};
-
-  // Function call
-  solve(N, M, matrix1, Q, queries);
-
-  return 0;
-}
-```

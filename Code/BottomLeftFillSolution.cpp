@@ -10,14 +10,15 @@
 #include "output.h"
 #include "parser.h"
 #include "validator.h"
-#include "SegmentTree.h"
+#include <cmath>
+#include "RMQ.h"
 using namespace std;
 
 #define INF 1e9
 #define ALPHA 5587.836
 #define BETA 5975.6536
 
-void print2(tuple<int,int,int> t,int x){
+void print2(tuple<int,int,int> t,int x = 0){
     cout<<get<0>(t)-x<<",";
     cout<<get<1>(t)-x<<",";
     cout<<get<2>(t)-x;
@@ -26,7 +27,8 @@ void print2(tuple<int,int,int> t,int x){
 
 class ULDBaseMatrix{
     private:
-        vector<vector<int>> Matrix;
+        // vector<vector<int>> Matrix;
+        MaxSumQuery2D Matrix;
         int length,width,height;
         int maxWeightLimit,curWeight;
         int uldIdentifier;
@@ -40,7 +42,9 @@ class ULDBaseMatrix{
             maxWeightLimit=u.weightLimit;
             curWeight=0;
             uldIdentifier=u.uldIdentifier;
-            Matrix.resize(length,vector<int> (width,0));
+            // Matrix.resize(length,vector<int> (width,0));
+            vector<vector<int>> emptyArray(length,vector<int>(width,0));
+            Matrix.build(length,width,emptyArray);
         }
 
         int getULDIdentifier(){
@@ -52,7 +56,8 @@ class ULDBaseMatrix{
         //     cout<<"Matrix \n";
         //     for(int i=0;i<length;i++){
         //         for(int j=0;j<width;j++){
-        //             cout<<Matrix[i][j]<<" ";
+        //             // cout<<Matrix[i][j]<<" ";
+        //             cout<<Matrix.max
         //         }
         //         cout<<'\n';
         //     }
@@ -72,26 +77,26 @@ class ULDBaseMatrix{
             tuple<int,int,int> bestStartPoint = make_tuple(-1,-1,-1);
             tuple<int,int,int> bestEndPoint = make_tuple(-1,-1,-1);
             double bestVolumeLossPerc = INF;
-
             for(int k=0;k<6;k++)
             {
                 next_permutation(rotatedPackageDimensions.begin(),rotatedPackageDimensions.end());
                 auto [packageLength,packageWidth,packageHeight] = rotatedPackageDimensions;
                 int curPackageArea = packageLength*packageWidth;
-
                 for(int x=0;x<=length-packageLength;x++){
                     for(int y=0;y<=width-packageWidth;y++){
                         // Checking insertion at base point (x,y)
-                        
                         int maximumHeight=0;
                         int curVolume=0;
 
-                        for(int i=x;i<x+packageLength;i++){
-                            for(int j=y;j<y+packageWidth;j++){
-                                maximumHeight=max(maximumHeight,Matrix[i][j]);
-                                curVolume+=Matrix[i][j];
-                            }
-                        }
+                        // for(int i=x;i<x+packageLength;i++){
+                        //     for(int j=y;j<y+packageWidth;j++){
+                        //         maximumHeight=max(maximumHeight,Matrix[i][j]);
+                        //         curVolume+=Matrix[i][j];
+                        //     }
+                        // }
+
+                        maximumHeight = Matrix.maxQuery(x,y,x+packageLength-1,y+packageWidth-1);
+                        curVolume = Matrix.sumQuery(x,y,x+packageLength-1,y+packageWidth-1);
 
                         // Height check
                         if(maximumHeight + packageHeight > height){
@@ -118,11 +123,14 @@ class ULDBaseMatrix{
         {
             curWeight += packageWeight;
 
-            for(int i=get<0>(startPoint);i<get<0>(endPoint);i++){
-                for(int j=get<1>(startPoint);j<get<1>(endPoint);j++){
-                        Matrix[i][j]=get<2>(endPoint);
+            auto currState = Matrix.getState();
+            for(int i=get<0>(startPoint);i< get<0>(endPoint);i++){
+                for(int j=get<1>(startPoint);j< get<1>(endPoint);j++){
+                        // Matrix[i][j]=get<2>(endPoint);
+                        currState[i][j] = get<2>(endPoint);
                 }
             }
+            Matrix.build(length,width,currState);
         }
 };
 
