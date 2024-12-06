@@ -1,0 +1,2 @@
+Cost of Delay : 32185
+Package number: 38 is a PRIORITY package but it has not been taken
