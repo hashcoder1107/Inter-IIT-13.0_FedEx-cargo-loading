@@ -134,7 +134,7 @@ class ULDBaseMatrix{
         }
 };
 
-int main()
+long long delayCost(double a1,double b1)
 {
     int k;
     vector<PACKAGE> packages;
@@ -156,7 +156,7 @@ int main()
     // Sort ULDs
 
     function<double(int,int)> ULDCmp = [&](int volume,int weight){
-        return volume/BETA+weight;
+        return volume/b1+weight;
     };
 
     sort(ulds.begin(),ulds.end(),[&](ULD u1,ULD u2){
@@ -166,11 +166,12 @@ int main()
     // Sort Packages
 
     function<double(int,int)> priorityCmp = [&](int volume,int weight){
-        return volume/ALPHA+weight;
+        // return volume/a1+weight;
+        return -volume;
     };
 
     function<double(int,int,int)> economyCmp = [&](int volume,int weight,int cost){
-        return (volume/ALPHA+weight)/cost;
+        return (volume/a1+weight)/cost;
     };
 
     sort(packages.begin(),packages.end(),[&](PACKAGE p1,PACKAGE p2){
@@ -201,10 +202,10 @@ int main()
             if(validInsertionPoint.first != make_tuple(-1,-1,-1)){
                 packageTaken = true;
                 
-                cout<<"Package "<<p.packageIdentifier<<" stored in ULD "<<matrix.getULDIdentifier()<<"\n";
-                cout<<"Start point : ";
+                // cout<<"Package "<<p.packageIdentifier<<" stored in ULD "<<matrix.getULDIdentifier()<<"\n";
+                // cout<<"Start point : ";
                 print2(validInsertionPoint.first,0);
-                cout<<"End point : ";
+                // cout<<"End point : ";
                 print2(validInsertionPoint.second,0);
 
                 if(p.priority)
@@ -238,6 +239,13 @@ int main()
     packages.insert(packages.begin(),dummyPackage);
     ulds.insert(ulds.begin(),dummyULD);
     validate(ulds, packages, output, k); // Validating output
+
+    return costOfDelay;
+}
+
+int main()
+{
+    delayCost(ALPHA-500,BETA);
 
     return 0;
 }

@@ -230,7 +230,7 @@ void validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, OUTPUT &solnO
 
     sort(solnOutput.outputRows.begin(), solnOutput.outputRows.end(), comparator); // sorted using manual comparator
 
-    solnOutput.print();
+    // solnOutput.print();
 
     if (allPriorityPackagesTaken(packagesInfo, solnOutput) && boundaryCheck(uldInfo, solnOutput) && overlapCheck(uldInfo, uldBaseMatrix, solnOutput) && weightCheck(uldInfo, packagesInfo, solnOutput))
     {
