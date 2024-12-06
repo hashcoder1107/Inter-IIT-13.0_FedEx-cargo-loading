@@ -1,7 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <bits/stdc++.h>
 #include "package.h"
 #include "uld.h"
 using namespace std;
@@ -40,8 +39,9 @@ PACKAGE parsePackageInput(const string &inputRow)
     getline(stringStreamObject, _delayCost, ',');
     if (_delayCost != "-")
         delayCost = stoi(_delayCost);
-    else
+    else{
         delayCost = PRIORITY_DELAY_COST;
+    }
 
     // Prepared a package object with the fetched details to return
     PACKAGE pkg(packageIdentifier, length, width, height, weight, delayCost, priority);

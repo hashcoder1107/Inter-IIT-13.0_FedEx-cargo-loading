@@ -1,7 +1,6 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 
-#include <bits/stdc++.h>
 #include "uld.h"
 #include "package.h"
 #include "output.h"
@@ -66,7 +65,7 @@ bool boundaryCheck(vector<ULD> &uldInfo, OUTPUT &solnOutput)
         index++;
     }
 
-    for (index; index < solnOutput.outputRows.size(); index++)
+    for (; index < solnOutput.outputRows.size(); index++)
     {
         vector<int> ULDBottomLeft(3, 0);
         vector<int> ULDTopRight(3, 0);
@@ -162,7 +161,7 @@ bool weightCheck(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, OUTPUT &so
         index++;
     }
 
-    for (index; index < solnOutput.outputRows.size(); index++)
+    for (; index < solnOutput.outputRows.size(); index++)
     {
         uldWeights[solnOutput.outputRows[index].uldNumber] += packagesInfo[solnOutput.outputRows[index].packageNumber].weight;
     }
@@ -204,7 +203,7 @@ int costFunction(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, OUTPUT &so
         index++;
     }
 
-    for (index; index < solnOutput.outputRows.size(); index++)
+    for (; index < solnOutput.outputRows.size(); index++)
     {
         if (packagesInfo[solnOutput.outputRows[index].packageNumber].priority)
         {

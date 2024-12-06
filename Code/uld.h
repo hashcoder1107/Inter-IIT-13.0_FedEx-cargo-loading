@@ -1,7 +1,6 @@
 #ifndef ULD_H
 #define ULD_H
 
-#include <bits/stdc++.h>
 using namespace std;
 
 class ULD

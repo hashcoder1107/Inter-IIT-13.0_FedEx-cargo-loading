@@ -92,7 +92,7 @@ class BinPacking:
     # Retrieve variables (Ensure `create_variables` is called before this method)
     p, prio, x, y, z, _x, _y, _z, x_a, x_b, y_a, y_b, z_a, z_b, r = variables
 
-    model.Add(sum(sum(p[i][j] for j in range(m))*priority[i] for i in range(n))==sum(priority))
+    # model.Add(sum(sum(p[i][j] for j in range(m))*priority[i] for i in range(n))==sum(priority))
     for i in range(n):
       model.Add(sum(p[i][j] for j in range(m)) <= 1)
 
@@ -183,7 +183,7 @@ class BinPacking:
 
 def bin_packing(n, m, l, w, h, wt, K, cost, priority, L, W, H, C):
   problem = BinPacking(n, m, l, w, h, wt, K, cost, priority, L, W, H, C)
-  problem.set_time_limit(300)
+  problem.set_time_limit(60*60)
   return problem.solve()
 
 def main():
