@@ -179,7 +179,7 @@ long long delayCost(double a1,double b1)
         int randomValue = mn + mt()%(mx-mn+1);
 
         double randomPerc = ((double)(randomValue)/1000);
-        return randomPerc;
+        return randomPerc*val;
     };
 
     function<double(int,int)> priorityCmp = [&](int volume,int weight){
