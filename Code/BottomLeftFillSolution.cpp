@@ -171,6 +171,8 @@ int main()
     }
 
     for(auto p:packages){
+        cout<<p.packageIdentifier<<" : "<<p.priority<<endl;
+        continue;
         bool packageTaken = false;
         for(auto &matrix:v){
             pair<tuple<int,int,int>,tuple<int,int,int>> validInsertionPoint = matrix.findValidInsertionPoint(p);
