@@ -11,12 +11,20 @@
 #include "parser.h"
 #include "validator.h"
 #include <cmath>
+#include <random>
 #include "RMQ.h"
 using namespace std;
 
 #define INF 1e9
 #define ALPHA 5587.836
 #define BETA 5975.6536
+
+#define RANDOM_PERC 10
+
+// Initializing the sequence  
+  // with a seed value 
+  // similar to srand() 
+  mt19937 mt(time(nullptr)); 
 
 void print2(tuple<int,int,int> t,int x = 0){
     cout<<get<0>(t)-x<<",";
@@ -164,6 +172,18 @@ long long delayCost(double a1,double b1)
     });
 
     // Sort Packages
+    function<double(double)> getRandom = [&](double val){
+        int mn=1000-RANDOM_PERC*10;
+        int mx=1000+RANDOM_PERC*10;
+
+        int randomValue = mn + mt()%(mx-mn+1);
+
+        double randomPerc = ((double)(randomValue)/1000);
+        return randomPerc;
+    };
+
+    cout<<getRandom(1)<<endl;
+    return 0;
 
     function<double(int,int)> priorityCmp = [&](int volume,int weight){
         // return volume/a1+weight;
@@ -245,6 +265,8 @@ long long delayCost(double a1,double b1)
 
 int main()
 {
+    srand(time(NULL));
+
     delayCost(ALPHA,BETA);
 
     return 0;

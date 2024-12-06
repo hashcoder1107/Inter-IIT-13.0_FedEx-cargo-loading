@@ -9,7 +9,10 @@ fi
 # Read the start index
 x=$1
 
-# Run the program 5 times and redirect output
+# Run the program 5 times and append the output
 for ((i=x; i<x+5; i++)); do
+    echo "Running iteration $i"
+    g++ BottomLeftFillSolution.cpp
     ./a.out > "out${i}.txt"
+    sleep (1)
 done
