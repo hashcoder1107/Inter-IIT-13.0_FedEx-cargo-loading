@@ -79,7 +79,13 @@ public:
     for(auto [_, package] : packages) {
       if(package.packageId) {
         str += to_string(package.packageId) + ",";
-        str += to_string(package.assignedUld) + ",";
+
+        if(package.assignedUld == -1) {
+          str += "NONE,";
+        }else {
+          str += to_string(package.assignedUld) + ",";
+        }
+
         str += to_string(get<0>(package.bottomLeft)) + ",";
         str += to_string(get<1>(package.bottomLeft)) + ",";
         str += to_string(get<2>(package.bottomLeft)) + ",";
