@@ -109,11 +109,7 @@ By combining these techniques, the goal was to minimize the objective function, 
 ---
 
 # Demo of Visualisation
-
-<video src="./Assets/Visualisation_video.mp4" controls width="600">
-  Your browser does not support the video tag.
-</video>
-
+[Watch this video](./Assets/Visualisation_video.mp4)
 ---
 
 <h2 id="usage"> 📋 Usage Instructions </h2>
