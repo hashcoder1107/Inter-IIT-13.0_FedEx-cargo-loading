@@ -10,7 +10,7 @@
 #include "../output.h"
 #include "../Solution/Solution.h"
 #include "../parser.h"
-#include "../validator.h"
+#include "../Validator/validator.h"
 #include <cmath>
 #include "RMQ.h"
 #define INF 1e9
