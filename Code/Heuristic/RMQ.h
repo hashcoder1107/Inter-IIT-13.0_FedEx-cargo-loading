@@ -1,10 +1,12 @@
 #pragma once
-
 #include <vector>
+
+// Sparse Table Data Structure 
+// Supports: O(1) Range maximum and Range sum queries
+// Supports: O(N * M) Batch updates
 
 class RMQ2D {
   int n, m, lgn, lgm;
-  // int matrix[N][N];
   vector<vector<vector<vector<int>>>> table;
 
   virtual int merge(int a, int b) = 0;

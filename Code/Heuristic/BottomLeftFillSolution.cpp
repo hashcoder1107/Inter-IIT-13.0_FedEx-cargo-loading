@@ -51,8 +51,6 @@ int main() {
 
   int cost = delayCost(ALPHA, BETA, k, packages, ulds, solution);
 
-  //   cout << validate(k, packages, ulds, solution) << endl;
-
   cout << solution.toString() << endl;
 
   return 0;

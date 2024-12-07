@@ -20,7 +20,6 @@ using namespace std;
 
 class ULDBaseMatrix {
 private:
-  // vector<vector<int>> Matrix;
   MaxSumQuery2D Matrix;
   int length, width, height;
   int maxWeightLimit, curWeight;
@@ -35,7 +34,6 @@ public:
     maxWeightLimit = u.weightLimit;
     curWeight = 0;
     uldIdentifier = u.uldIdentifier;
-    // Matrix.resize(length,vector<int> (width,0));
     vector<vector<int>> emptyArray(length, vector<int>(width, 0));
     Matrix.build(length, width, emptyArray);
   }
@@ -46,7 +44,7 @@ public:
   // Heuristic . Returns {-1,-1} if no such point is found
   pair<tuple<int, int, int>, tuple<int, int, int>>
   findValidInsertionPoint(PACKAGE p) {
-    // print();
+
     // Weight check
     if(curWeight + p.weight > maxWeightLimit) {
       return make_pair(make_tuple(-1, -1, -1), make_tuple(-1, -1, -1));
@@ -91,7 +89,6 @@ public:
       }
     }
 
-    // cout<<get<0>(bestStartPoint)<<" "<<Matrix.size()<<"\n";
     return make_pair(bestStartPoint, bestEndPoint);
   }
 
@@ -102,7 +99,6 @@ public:
     auto currState = Matrix.getState();
     for(int i = get<0>(startPoint); i < get<0>(endPoint); i++) {
       for(int j = get<1>(startPoint); j < get<1>(endPoint); j++) {
-        // Matrix[i][j]=get<2>(endPoint);
         currState[i][j] = get<2>(endPoint);
       }
     }
@@ -120,8 +116,6 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> packages,
   ulds.erase(ulds.begin());
   vector<bool> containsPriority(ulds.size(), 0);
 
-  // Bottom Top Fill Heuristic
-
   // Sort ULDs
 
   function<double(int, int)> ULDCmp
@@ -135,7 +129,6 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> packages,
   // Sort Packages
 
   function<double(int, int)> priorityCmp = [&](int volume, int weight) {
-    // return volume/a1+weight;
     return -volume;
   };
 
@@ -159,7 +152,7 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> packages,
     }
   });
 
-  // Iterate over Packages using Bottom Top Heuristic
+  // Iterate over Packages using Minimum Volume Excluded Heuristic
 
   long long costOfDelay = 0;
   vector<ULDBaseMatrix> v;
@@ -176,19 +169,12 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> packages,
       if(validInsertionPoint.first != make_tuple(-1, -1, -1)) {
         packageTaken = true;
 
-        // cout<<"Package "<<p.packageIdentifier<<" stored in ULD
-        // "<<matrix.getULDIdentifier()<<"\n"; cout<<"Start point : ";
-        // print2(validInsertionPoint.first,0);
-        // cout<<"End point : ";
-        // print2(validInsertionPoint.second,0);
-
         if(p.priority)
           containsPriority[matrix.getULDIdentifier() - 1] = 1;
 
         matrix.fitPackage(validInsertionPoint.first,
                           validInsertionPoint.second, p.weight);
-        // output.outputRows[p.packageIdentifier].updateOutput(validInsertionPoint.first,
-        // validInsertionPoint.second, matrix.getULDIdentifier());
+
         sol.updatePackageAssignment(
           p.packageIdentifier, p.weight, validInsertionPoint.first,
           validInsertionPoint.second, matrix.getULDIdentifier(), p.priority);
@@ -201,14 +187,11 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> packages,
     }
   }
 
-  // Generate Output
-
   for(int i = 0; i < ulds.size(); i++) {
     if(containsPriority[i])
       costOfDelay += k;
   }
 
-  // cout<<"Cost of Delay : "<<costOfDelay<<"\n";
   sol.setCost(costOfDelay);
 
   return costOfDelay;

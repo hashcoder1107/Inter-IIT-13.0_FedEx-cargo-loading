@@ -86,22 +86,6 @@ ValidationResult validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo,
   }
 
   return ValidationResult::SATISFIED;
-  // vector<vector<vector<int>>> uldBaseMatrix;
-  // initialise(uldBaseMatrix, uldInfo);
-
-  // sort(solnOutput.outputRows.begin(), solnOutput.outputRows.end(),
-  // comparator); // sorted using manual comparator
-
-  // solnOutput.print();
-
-  // if (allPriorityPackagesTaken(packagesInfo, solnOutput) &&
-  // boundaryCheck(uldInfo, solnOutput) && overlapCheck(uldInfo, uldBaseMatrix,
-  // solnOutput) && weightCheck(uldInfo, packagesInfo, solnOutput))
-  // {
-  //     cout << "Given solution passes all 4 parameters" << endl;
-  //     cout << "Total Cost is: " << costFunction(uldInfo, packagesInfo,
-  //     solnOutput, k) << endl;
-  // }
 }
 
 #endif

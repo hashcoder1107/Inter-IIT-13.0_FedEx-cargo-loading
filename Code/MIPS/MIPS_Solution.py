@@ -241,9 +241,6 @@ def main():
   n=len(l)
   m=len(L)
 
-  # print(L,W,H,C)
-  # print(l,w,h,wt,cost,priority)
-  # print(K)
 
   (status, 
   objective, 
