@@ -7,7 +7,6 @@
 #include <functional>
 #include "../uld.h"
 #include "../package.h"
-#include "../output.h"
 #include "../Solution/Solution.h"
 #include "../parser.h"
 #include "../Validator/validator.h"
