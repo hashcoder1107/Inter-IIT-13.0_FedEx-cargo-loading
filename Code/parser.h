@@ -86,7 +86,7 @@ void parseInput(int &uldPriorityPenalty, vector<PACKAGE> &packages, vector<ULD> 
     ULD dummyULD;
     ulds.push_back(dummyULD);
 
-    ifstream inputFile("../../Input/input.txt");
+    ifstream inputFile("../../Input/input.csv");
     if (!inputFile.is_open())
     {
         cerr << "Error: Could not open the file." << endl;
