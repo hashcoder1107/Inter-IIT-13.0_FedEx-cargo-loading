@@ -1,6 +1,6 @@
 #include "Parameters/Parameters.h"
 
-#include "BottomLeftFillSolution.h"
+#include "minVolumeExcluded.h"
 
 using namespace std;
 
