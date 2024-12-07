@@ -122,9 +122,9 @@ Please refer to the "Makefile" for specific commands.
 
 ### How to run the program:
 ```
-build_heuristic ⁠# : Compiles heuristic solution file.
-make run_heuristic ⁠# : Runs heuristic solution file.
-make start_heuristic ⁠#: Combines building and running heuristic file.
-make start_mips ⁠# : Runs Python MIPS solution file.
+make build_heuristic  //Compiles heuristic solution file.
+make run_heuristic ⁠  //Runs heuristic solution file.
+make start_heuristic ⁠//Combines building and running heuristic file.
+make start_mips   //Runs Python MIPS solution file.
 ```
 ---
