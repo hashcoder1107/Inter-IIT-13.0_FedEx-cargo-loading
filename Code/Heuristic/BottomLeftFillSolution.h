@@ -5,24 +5,16 @@
 #include <fstream>
 #include <tuple>
 #include <functional>
-#include "../uld.h"
-#include "../package.h"
+#include "../Model/package.h"
+#include "../Model/uld.h"
 #include "../Solution/Solution.h"
-#include "../parser.h"
+#include "../Parser/parser.h"
 #include "../Validator/validator.h"
 #include <cmath>
 #include "RMQ.h"
 #define INF 1e9
 
 using namespace std;
-
-void print2(tuple<int, int, int> t, int x = 0)
-{
-  cout << get<0>(t) - x << ",";
-  cout << get<1>(t) - x << ",";
-  cout << get<2>(t) - x;
-  cout << "\n";
-}
 
 class ULDBaseMatrix
 {
@@ -53,20 +45,6 @@ public:
     return uldIdentifier;
   }
 
-  // void print()
-  // {
-  //     cout<<"Matrix \n";
-  //     for(int i=0;i<length;i++){
-  //         for(int j=0;j<width;j++){
-  //             // cout<<Matrix[i][j]<<" ";
-  //             cout<<Matrix.max
-  //         }
-  //         cout<<'\n';
-  //     }
-
-  //     cout<<"\n";
-  // }
-
   // Returns best position where Package can be inserted using Top Bottom Heuristic . Returns {-1,-1} if no such point is found
   pair<tuple<int, int, int>, tuple<int, int, int>> findValidInsertionPoint(PACKAGE p)
   {
@@ -93,13 +71,6 @@ public:
           // Checking insertion at base point (x,y)
           int maximumHeight = 0;
           int curVolume = 0;
-
-          // for(int i=x;i<x+packageLength;i++){
-          //     for(int j=y;j<y+packageWidth;j++){
-          //         maximumHeight=max(maximumHeight,Matrix[i][j]);
-          //         curVolume+=Matrix[i][j];
-          //     }
-          // }
 
           maximumHeight = Matrix.maxQuery(x, y, x + packageLength - 1, y + packageWidth - 1);
           curVolume = Matrix.sumQuery(x, y, x + packageLength - 1, y + packageWidth - 1);
@@ -144,12 +115,11 @@ public:
   }
 };
 
-long long delayCost(double a1, double b1, int k, vector<PACKAGE> _packages, vector<ULD> _ulds)
+long long delayCost(double a1, double b1, int k, vector<PACKAGE> _packages, vector<ULD> _ulds, Solution &sol)
 {
   auto packages = _packages;
   auto ulds = _ulds;
 
-  Solution sol;
   for (auto p : packages)
   {
     sol.createPackageAssignment(p.packageIdentifier);
@@ -255,10 +225,32 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> _packages, vect
   ULD dummyULD;
   packages.insert(packages.begin(), dummyPackage);
   ulds.insert(ulds.begin(), dummyULD);
+  auto chk = validate(ulds, packages, sol, k); // Validating output
 
-  cout << sol.toString() << endl;
-  bool chk = validate(ulds, packages, sol, k); // Validating output
-  cout << chk << endl;
+  sol.setValid(false);
+  switch (chk)
+  {
+  case ValidationResult::SATISFIED:
+    /* code */
+    sol.setValid(true);
+    break;
+  case ValidationResult::OVERLAP:
+    /* code */
+    cout << "Validator: Two Packages Overlap with each other" << endl;
+    break;
+  case ValidationResult::VOLUME_OVERFLOW:
+    /* code */
+    cout << "Validator: A package overflows the assigned ULD's limit" << endl;
+    break;
+  case ValidationResult::WEIGHT_OVERFLOW:
+    /* code */
+    cout << "Validator: Total weight assigned to a ULD exceeds its capacity" << endl;
+    break;
+  
+  default:
+    break;
+  }
+  
 
   return costOfDelay;
 }

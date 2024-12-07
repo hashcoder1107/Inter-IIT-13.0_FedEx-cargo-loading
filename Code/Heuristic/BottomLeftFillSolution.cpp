@@ -12,10 +12,21 @@ int main()
     vector<PACKAGE> packages;
     vector<ULD> ulds;
 
-    parseInput(k, packages, ulds);
+    string inputPath = "../../input/input.txt";
 
-    int cost = delayCost(ALPHA,BETA,k, packages, ulds);
-    cout << cost << endl;
+    parseInput(k, packages, ulds, inputPath);
+
+    Solution solution;
+
+    int cost = delayCost(ALPHA, BETA, k, packages, ulds, solution);
+
+    if (solution.getValid() == true)
+    {
+        cout << solution.toString() << endl;
+    }else {
+        cout << "Invalid Solution: " << endl;
+        cout << solution.toString() << endl;
+    }
 
     return 0;
 }

@@ -1,13 +1,22 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 
-#include "../uld.h"
-#include "../package.h"
-#include "../parser.h"
+#include "../Model/uld.h"
+#include "../Model/package.h"
+#include "../Parser/parser.h"
 #include "../Solution/Solution.h"
 using namespace std;
 
-bool validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol, int &k)
+enum ValidationResult
+{
+    SATISFIED,
+    OVERLAP,
+    VOLUME_OVERFLOW,
+    WEIGHT_OVERFLOW,
+    EXCLUDED_PRIORITY
+};
+
+ValidationResult validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol, int &k)
 {
     int numUld = uldInfo.size();
     int mxUldDim = 0;
@@ -28,11 +37,11 @@ bool validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol
     sort(packages.begin(), packages.end(), [&](pair<int, AssignedPackage> left, pair<int, AssignedPackage> right)
          {  
             int z1 = get<2>(left.second.bottomLeft);
-            int z2 = get<2>(right.second.topRight);
+            int z2 = get<2>(right.second.bottomLeft);
 
             return z1 < z2; });
 
-    for (auto t : sol.getPackages())
+    for (auto t : packages)
     {
         auto package = t.second;
         int uldId = package.assignedUld;
@@ -41,7 +50,7 @@ bool validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol
             if (package.isPriority)
             {
                 cout << "Unused Priority: " << package.packageId << endl;
-                return false;
+                return ValidationResult::EXCLUDED_PRIORITY;
             }
             continue;
         }
@@ -58,7 +67,7 @@ bool validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol
         if (uldWeightSum[uldId] > assignedUld.weightLimit)
         {
             cout << "Weight Limit: " << uldId << ' ' << uldWeightSum[uldId] << endl;
-            return false;
+            return ValidationResult::WEIGHT_OVERFLOW;
         }
 
         // Volume
@@ -69,7 +78,7 @@ bool validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol
         int x2 = get<0>(package.topRight);
         int y2 = get<1>(package.topRight);
         int z2 = get<2>(package.topRight);
-        ;
+
 
         for (int i = x1; i < x2; i++)
         {
@@ -77,20 +86,24 @@ bool validate(vector<ULD> &uldInfo, vector<PACKAGE> &packagesInfo, Solution &sol
             {
                 if (table[uldId][i][j] >= z1)
                 {
-                    cout << "Overlap: " << package.packageId << endl;
-                    return false;
+                    // for(int i1 = 0; i1 <= 100; i1++) {
+                    //     for(int j2 = 0; j2 <= 100; j2++) {
+                    //         cout << table[uldId][i1][j2] << ' ';
+                    //     }
+                    //     cout << endl;
+                    // }
+                    // cout << x1 << ' ' << y1 << ' ' << x2 << ' ' << y2 << ' ' << z1 << endl << endl;
+                    return ValidationResult::OVERLAP;
                 }
                 else
                 {
-                    table[uldId][i][j] = z2;
+                    table[uldId][i][j] = z2 - 1;
                 }
             }
         }
-
-        return true;
     }
 
-    return true;
+    return ValidationResult::SATISFIED;
     // vector<vector<vector<int>>> uldBaseMatrix;
     // initialise(uldBaseMatrix, uldInfo);
 

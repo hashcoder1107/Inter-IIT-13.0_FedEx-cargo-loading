@@ -1,8 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "package.h"
-#include "uld.h"
+#include "../Model/package.h"
+#include "../Model/uld.h"
 using namespace std;
 
 #define PRIORITY_DELAY_COST 1000000000
@@ -77,7 +77,7 @@ ULD parseUldInput(const string &inputRow)
     return uld;
 }
 
-void parseInput(int &uldPriorityPenalty, vector<PACKAGE> &packages, vector<ULD> &ulds)
+void parseInput(int &uldPriorityPenalty, vector<PACKAGE> &packages, vector<ULD> &ulds, string inputPath)
 {
 
     PACKAGE dummyPackage;
@@ -86,7 +86,7 @@ void parseInput(int &uldPriorityPenalty, vector<PACKAGE> &packages, vector<ULD> 
     ULD dummyULD;
     ulds.push_back(dummyULD);
 
-    ifstream inputFile("../../Input/input.csv");
+    ifstream inputFile(inputPath);
     if (!inputFile.is_open())
     {
         cerr << "Error: Could not open the file." << endl;

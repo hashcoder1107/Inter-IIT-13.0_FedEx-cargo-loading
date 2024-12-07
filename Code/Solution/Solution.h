@@ -36,8 +36,22 @@ class Solution
 {
   map<int, AssignedPackage> packages;
   int cost;
+  bool valid;
 
 public:
+  Solution()
+  {
+    valid = true;
+  }
+  void setValid(bool flag)
+  {
+    valid = flag;
+  }
+  bool getValid()
+  {
+    return valid;
+  }
+
   void createPackageAssignment(int packageId)
   {
     packages[packageId] = AssignedPackage(packageId, -1, -1, make_tuple(-1, -1, -1), make_tuple(-1, -1, -1), false);
