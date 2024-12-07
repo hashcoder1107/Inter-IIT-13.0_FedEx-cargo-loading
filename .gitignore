@@ -3,4 +3,3 @@
 *.vscode
 builds
 venv
-.clang-format
