@@ -1,3 +1,7 @@
+#pragma once
+
+#include <vector>
+
 class RMQ2D {
   int n, m, lgn, lgm;
   // int matrix[N][N];

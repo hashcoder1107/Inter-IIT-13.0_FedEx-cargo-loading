@@ -1,0 +1,24 @@
+ULD Data:
+  ULDID Length Width Height Weight Limit
+0    U1    224   318    162         2500
+1    U2    224   318    162         2500
+2    U3    244   318    244         2800
+3    U4    244   318    244         2800
+4    U5    244   318    285         3500
+5    U6    244   318    285         3500
+
+Package Data:
+    PackageID Length Width Height Weight Priority/Economy Cost of Delay
+0         P-1     99    53     55     61          Economy           176
+1         P-2     56    99     81     53         Priority             -
+2         P-3     42   101     51     17         Priority             -
+3         P-4    108    75     56     73          Economy           138
+4         P-5     88    58     64     93          Economy           139
+..        ...    ...   ...    ...    ...              ...           ...
+395     P-396    102   109     42    118          Economy           120
+396     P-397     80    51     59     51          Economy            81
+397     P-398     52   103     85     68          Economy           130
+398     P-399     45    44     89     22          Economy            63
+399     P-400     52    50     64     37          Economy            71
+
+[400 rows x 7 columns]

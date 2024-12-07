@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -16,8 +18,7 @@
 
 using namespace std;
 
-class ULDBaseMatrix
-{
+class ULDBaseMatrix {
 private:
   // vector<vector<int>> Matrix;
   MaxSumQuery2D Matrix;
@@ -27,8 +28,7 @@ private:
 
 public:
   // Initialises ULD Matrix
-  ULDBaseMatrix(ULD u)
-  {
+  ULDBaseMatrix(ULD u) {
     length = u.length;
     width = u.width;
     height = u.height;
@@ -40,18 +40,15 @@ public:
     Matrix.build(length, width, emptyArray);
   }
 
-  int getULDIdentifier()
-  {
-    return uldIdentifier;
-  }
+  int getULDIdentifier() { return uldIdentifier; }
 
-  // Returns best position where Package can be inserted using Top Bottom Heuristic . Returns {-1,-1} if no such point is found
-  pair<tuple<int, int, int>, tuple<int, int, int>> findValidInsertionPoint(PACKAGE p)
-  {
+  // Returns best position where Package can be inserted using Top Bottom
+  // Heuristic . Returns {-1,-1} if no such point is found
+  pair<tuple<int, int, int>, tuple<int, int, int>>
+  findValidInsertionPoint(PACKAGE p) {
     // print();
     // Weight check
-    if (curWeight + p.weight > maxWeightLimit)
-    {
+    if(curWeight + p.weight > maxWeightLimit) {
       return make_pair(make_tuple(-1, -1, -1), make_tuple(-1, -1, -1));
     }
     array<int, 3> rotatedPackageDimensions = {p.length, p.width, p.height};
@@ -59,35 +56,35 @@ public:
     tuple<int, int, int> bestStartPoint = make_tuple(-1, -1, -1);
     tuple<int, int, int> bestEndPoint = make_tuple(-1, -1, -1);
     double bestVolumeLossPerc = INF;
-    for (int k = 0; k < 6; k++)
-    {
-      next_permutation(rotatedPackageDimensions.begin(), rotatedPackageDimensions.end());
-      auto [packageLength, packageWidth, packageHeight] = rotatedPackageDimensions;
+    for(int k = 0; k < 6; k++) {
+      next_permutation(rotatedPackageDimensions.begin(),
+                       rotatedPackageDimensions.end());
+      auto [packageLength, packageWidth, packageHeight]
+        = rotatedPackageDimensions;
       int curPackageArea = packageLength * packageWidth;
-      for (int x = 0; x <= length - packageLength; x++)
-      {
-        for (int y = 0; y <= width - packageWidth; y++)
-        {
+      for(int x = 0; x <= length - packageLength; x++) {
+        for(int y = 0; y <= width - packageWidth; y++) {
           // Checking insertion at base point (x,y)
           int maximumHeight = 0;
           int curVolume = 0;
 
-          maximumHeight = Matrix.maxQuery(x, y, x + packageLength - 1, y + packageWidth - 1);
-          curVolume = Matrix.sumQuery(x, y, x + packageLength - 1, y + packageWidth - 1);
+          maximumHeight = Matrix.maxQuery(x, y, x + packageLength - 1,
+                                          y + packageWidth - 1);
+          curVolume = Matrix.sumQuery(x, y, x + packageLength - 1,
+                                      y + packageWidth - 1);
 
           // Height check
-          if (maximumHeight + packageHeight > height)
-          {
+          if(maximumHeight + packageHeight > height) {
             // Cannot fit inside ULD for current point
             continue;
           }
 
           int volumeLoss = curPackageArea * maximumHeight - curVolume;
           double volumeLossPerc = ((double)volumeLoss) / curPackageArea;
-          if (volumeLossPerc < bestVolumeLossPerc)
-          {
+          if(volumeLossPerc < bestVolumeLossPerc) {
             bestStartPoint = {x, y, maximumHeight};
-            bestEndPoint = {x + packageLength, y + packageWidth, maximumHeight + packageHeight};
+            bestEndPoint = {x + packageLength, y + packageWidth,
+                            maximumHeight + packageHeight};
             bestVolumeLossPerc = volumeLossPerc;
           }
         }
@@ -98,15 +95,13 @@ public:
     return make_pair(bestStartPoint, bestEndPoint);
   }
 
-  void fitPackage(tuple<int, int, int> startPoint, tuple<int, int, int> endPoint, int packageWeight)
-  {
+  void fitPackage(tuple<int, int, int> startPoint,
+                  tuple<int, int, int> endPoint, int packageWeight) {
     curWeight += packageWeight;
 
     auto currState = Matrix.getState();
-    for (int i = get<0>(startPoint); i < get<0>(endPoint); i++)
-    {
-      for (int j = get<1>(startPoint); j < get<1>(endPoint); j++)
-      {
+    for(int i = get<0>(startPoint); i < get<0>(endPoint); i++) {
+      for(int j = get<1>(startPoint); j < get<1>(endPoint); j++) {
         // Matrix[i][j]=get<2>(endPoint);
         currState[i][j] = get<2>(endPoint);
       }
@@ -115,13 +110,12 @@ public:
   }
 };
 
-long long delayCost(double a1, double b1, int k, vector<PACKAGE> _packages, vector<ULD> _ulds, Solution &sol)
-{
+long long delayCost(double a1, double b1, int k, vector<PACKAGE> _packages,
+                    vector<ULD> _ulds, Solution &sol) {
   auto packages = _packages;
   auto ulds = _ulds;
 
-  for (auto p : packages)
-  {
+  for(auto p : packages) {
     sol.createPackageAssignment(p.packageIdentifier);
   }
 
@@ -133,124 +127,92 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> _packages, vect
 
   // Sort ULDs
 
-  function<double(int, int)> ULDCmp = [&](int volume, int weight)
-  {
-    return volume / b1 + weight;
-  };
+  function<double(int, int)> ULDCmp
+    = [&](int volume, int weight) { return volume / b1 + weight; };
 
-  sort(ulds.begin(), ulds.end(), [&](ULD u1, ULD u2)
-       { return ULDCmp(u1.length * u1.width * u1.height, u1.weightLimit) > ULDCmp(u2.length * u2.width * u2.height, u2.weightLimit); });
+  sort(ulds.begin(), ulds.end(), [&](ULD u1, ULD u2) {
+    return ULDCmp(u1.length * u1.width * u1.height, u1.weightLimit)
+           > ULDCmp(u2.length * u2.width * u2.height, u2.weightLimit);
+  });
 
   // Sort Packages
 
-  function<double(int, int)> priorityCmp = [&](int volume, int weight)
-  {
+  function<double(int, int)> priorityCmp = [&](int volume, int weight) {
     // return volume/a1+weight;
     return -volume;
   };
 
-  function<double(int, int, int)> economyCmp = [&](int volume, int weight, int cost)
-  {
-    return (volume / a1 + weight) / cost;
-  };
+  function<double(int, int, int)> economyCmp
+    = [&](int volume, int weight, int cost) {
+        return (volume / a1 + weight) / cost;
+      };
 
-  sort(packages.begin(), packages.end(), [&](PACKAGE p1, PACKAGE p2)
-       {
-        if(p1.priority != p2.priority)
-            return p1.priority > p2.priority;
+  sort(packages.begin(), packages.end(), [&](PACKAGE p1, PACKAGE p2) {
+    if(p1.priority != p2.priority)
+      return p1.priority > p2.priority;
 
-        if(p1.priority){
-            return priorityCmp(p1.length*p1.width*p1.height,p1.weight) < priorityCmp(p2.length*p2.width*p2.height,p2.weight);
-        }
-        else{
-            return economyCmp(p1.length*p1.width*p1.height,p1.weight,p1.delayCost) < economyCmp(p2.length*p2.width*p2.height,p2.weight,p2.delayCost);
-        } });
+    if(p1.priority) {
+      return priorityCmp(p1.length * p1.width * p1.height, p1.weight)
+             < priorityCmp(p2.length * p2.width * p2.height, p2.weight);
+    } else {
+      return economyCmp(p1.length * p1.width * p1.height, p1.weight,
+                        p1.delayCost)
+             < economyCmp(p2.length * p2.width * p2.height, p2.weight,
+                          p2.delayCost);
+    }
+  });
 
   // Iterate over Packages using Bottom Top Heuristic
 
   long long costOfDelay = 0;
   vector<ULDBaseMatrix> v;
-  for (auto u : ulds)
-  {
+  for(auto u : ulds) {
     v.push_back(ULDBaseMatrix(u));
   }
 
-  for (auto p : packages)
-  {
+  for(auto p : packages) {
     bool packageTaken = false;
-    for (auto &matrix : v)
-    {
-      pair<tuple<int, int, int>, tuple<int, int, int>> validInsertionPoint = matrix.findValidInsertionPoint(p);
+    for(auto &matrix : v) {
+      pair<tuple<int, int, int>, tuple<int, int, int>> validInsertionPoint
+        = matrix.findValidInsertionPoint(p);
 
-      if (validInsertionPoint.first != make_tuple(-1, -1, -1))
-      {
+      if(validInsertionPoint.first != make_tuple(-1, -1, -1)) {
         packageTaken = true;
 
-        // cout<<"Package "<<p.packageIdentifier<<" stored in ULD "<<matrix.getULDIdentifier()<<"\n";
-        // cout<<"Start point : ";
+        // cout<<"Package "<<p.packageIdentifier<<" stored in ULD
+        // "<<matrix.getULDIdentifier()<<"\n"; cout<<"Start point : ";
         // print2(validInsertionPoint.first,0);
         // cout<<"End point : ";
         // print2(validInsertionPoint.second,0);
 
-        if (p.priority)
+        if(p.priority)
           containsPriority[matrix.getULDIdentifier() - 1] = 1;
 
-        matrix.fitPackage(validInsertionPoint.first, validInsertionPoint.second, p.weight);
-        // output.outputRows[p.packageIdentifier].updateOutput(validInsertionPoint.first, validInsertionPoint.second, matrix.getULDIdentifier());
-        sol.updatePackageAssignment(p.packageIdentifier, p.weight, validInsertionPoint.first, validInsertionPoint.second, matrix.getULDIdentifier(), p.priority);
+        matrix.fitPackage(validInsertionPoint.first,
+                          validInsertionPoint.second, p.weight);
+        // output.outputRows[p.packageIdentifier].updateOutput(validInsertionPoint.first,
+        // validInsertionPoint.second, matrix.getULDIdentifier());
+        sol.updatePackageAssignment(
+          p.packageIdentifier, p.weight, validInsertionPoint.first,
+          validInsertionPoint.second, matrix.getULDIdentifier(), p.priority);
         break;
       }
     }
 
-    if (packageTaken == false)
-    {
+    if(packageTaken == false) {
       costOfDelay += p.delayCost;
     }
   }
 
   // Generate Output
 
-  for (int i = 0; i < ulds.size(); i++)
-  {
-    if (containsPriority[i])
+  for(int i = 0; i < ulds.size(); i++) {
+    if(containsPriority[i])
       costOfDelay += k;
   }
 
   // cout<<"Cost of Delay : "<<costOfDelay<<"\n";
   sol.setCost(costOfDelay);
-
-  // Validate Output
-
-  PACKAGE dummyPackage;
-  ULD dummyULD;
-  packages.insert(packages.begin(), dummyPackage);
-  ulds.insert(ulds.begin(), dummyULD);
-  auto chk = validate(ulds, packages, sol, k); // Validating output
-
-  sol.setValid(false);
-  switch (chk)
-  {
-  case ValidationResult::SATISFIED:
-    /* code */
-    sol.setValid(true);
-    break;
-  case ValidationResult::OVERLAP:
-    /* code */
-    cout << "Validator: Two Packages Overlap with each other" << endl;
-    break;
-  case ValidationResult::VOLUME_OVERFLOW:
-    /* code */
-    cout << "Validator: A package overflows the assigned ULD's limit" << endl;
-    break;
-  case ValidationResult::WEIGHT_OVERFLOW:
-    /* code */
-    cout << "Validator: Total weight assigned to a ULD exceeds its capacity" << endl;
-    break;
-  
-  default:
-    break;
-  }
-  
 
   return costOfDelay;
 }
