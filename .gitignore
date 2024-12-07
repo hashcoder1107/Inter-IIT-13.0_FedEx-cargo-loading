@@ -3,5 +3,3 @@
 *.vscode
 builds
 venv
-Output
-__pycache__
