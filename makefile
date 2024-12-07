@@ -3,6 +3,7 @@ CPP = g++  # Cpp variable
 
 build_heuristic:
 	$(CPP) ./Code/Heuristic/BottomLeftFillSolution.cpp 
+	mkdir -p Builds
 	mv a.out ./Builds/blf_solution.exe
 
 run_heuristic:
