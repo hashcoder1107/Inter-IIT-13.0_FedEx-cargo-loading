@@ -13,10 +13,12 @@
 #include "../Parser/parser.h"
 #include "../Validator/validator.h"
 #include <cmath>
+#include <random>
 #include "RMQ.h"
 #define INF 1e9
-
 using namespace std;
+
+mt19937 mt(time(nullptr));
 
 class ULDBaseMatrix {
 private:
@@ -128,13 +130,23 @@ long long delayCost(double a1, double b1, int k, vector<PACKAGE> packages,
 
   // Sort Packages
 
+  function<double(double)> generateRandomComponent = [&](double val){
+      int mn=1000-RANDOM_PERC*10;
+      int mx=1000+RANDOM_PERC*10;
+
+      int randomValue = mn + mt()%(mx-mn+1);
+
+      double randomPerc = ((double)(randomValue)/1000);
+      return randomPerc*val;
+  };
+
   function<double(int, int)> priorityCmp = [&](int volume, int weight) {
-    return -volume;
+    return generateRandomComponent(-volume);
   };
 
   function<double(int, int, int)> economyCmp
     = [&](int volume, int weight, int cost) {
-        return (volume / a1 + weight) / cost;
+        return generateRandomComponent((volume / a1 + weight) / cost);
       };
 
   sort(packages.begin(), packages.end(), [&](PACKAGE p1, PACKAGE p2) {

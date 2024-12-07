@@ -1,5 +1,5 @@
 PYTHON = python3.10 # Python variable
-CPP = g++  # Cpp variable
+CPP = g++-14  # Cpp variable
 
 build_heuristic:
 	$(CPP) ./Code/Heuristic/solution.cpp 
