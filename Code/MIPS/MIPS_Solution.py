@@ -189,7 +189,7 @@ def bin_packing(n, m, l, w, h, wt, K, cost, priority, L, W, H, C):
 def main():
   start_time = time.time()
   # Open the input CSV file
-  with open("../Input/input.csv", "r") as file:
+  with open("../../Input/input.csv", "r") as file:
       lines = file.readlines()
 
   # Read the first line which contains K
