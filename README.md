@@ -96,7 +96,7 @@ By combining these techniques, the goal was to minimize the objective function, 
 <img src="./Assets/Time_vs_number_of_packages.jpeg" alt="Approaches used displayed in a plot" />
 <img src="./Assets/Cost_vs_number_of_packages.jpeg" alt="Approaches used displayed in a plot" />
 
-•⁠  ⁠The ⁠ Heuristic ⁠ approach takes approximately 1 sec to run on small batch of packages (~10-25 packages) while ⁠ MIPS ⁠ takes an unfeasible amount of time to execute for the same batch of packages.
+•⁠  ⁠The ⁠ Heuristic ⁠ approach takes approximately 1 minute to run on given input data while ⁠ MIPS ⁠ takes an unfeasible amount of time to execute for the same.
 
 ---
 
