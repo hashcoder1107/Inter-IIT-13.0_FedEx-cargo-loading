@@ -87,14 +87,14 @@ By combining these techniques, the goal was to minimize the objective function, 
 
 <h2 id="Analysis"> 📋 Analysis </h2>
 
-<p align="center"><img src="./Assests/usedApproaches.jpeg" alt="Approaches used displayed in a plot"/></p>
+<p align="center"><img src="./Assets/usedApproaches.jpeg" alt="Approaches used displayed in a plot"/></p>
 
 -   We followed the above shown flow and compared the results of both the approaches.
 
 -   The cost obtained in both the approaches and the time taken for execution were recorded and plotted.
 
-<img src="./Assests/Time_vs_number_of_packages.jpeg" alt="Approaches used displayed in a plot" />
-<img src="./Assests/Cost_vs_number_of_packages.jpeg" alt="Approaches used displayed in a plot" />
+<img src="./Assets/Time_vs_number_of_packages.jpeg" alt="Approaches used displayed in a plot" />
+<img src="./Assets/Cost_vs_number_of_packages.jpeg" alt="Approaches used displayed in a plot" />
 
 •⁠  ⁠The ⁠ Heuristic ⁠ approach takes approximately 1 sec to run on small batch of packages (~10-25 packages) while ⁠ MIPS ⁠ takes an unfeasible amount of time to execute for the same batch of packages.
 
@@ -102,7 +102,7 @@ By combining these techniques, the goal was to minimize the objective function, 
 
 <h2 id="solutionflow"> 📋 Code execution flow</h2>
 
-<img src="./Assests/finalSolution.jpeg" alt="Final solution flow" />
+<img src="./Assets/finalSolution.jpeg" alt="Final solution flow" />
 
 -   For the details of each file used in this flow refer the ⁠ readme ⁠ in ⁠ Code ⁠ folder.
 
@@ -110,7 +110,7 @@ By combining these techniques, the goal was to minimize the objective function, 
 
 # Demo of Visualisation
 
-<video src="./Assests/Visualisation_video.mp4" controls width="600">
+<video src="./Assets/Visualisation_video.mp4" controls width="600">
   Your browser does not support the video tag.
 </video>
 
@@ -122,7 +122,7 @@ Please refer to the "Makefile" for specific commands.
 
 ### How to run the program:
 •⁠  ⁠⁠ build_heuristic ⁠: Compiles heuristic solution file.
-•⁠  ⁠⁠ run_heuristic ⁠: Runs heuristic solution file.
-•⁠  ⁠⁠ start_heuristic ⁠: Combines building and running heuristic file.
-•⁠  ⁠⁠ start_mips ⁠: Runs Python MIPS solution file.
+•⁠  ⁠⁠ make run_heuristic ⁠: Runs heuristic solution file.
+•⁠  ⁠⁠ make start_heuristic ⁠: Combines building and running heuristic file.
+•⁠  ⁠⁠ make start_mips ⁠: Runs Python MIPS solution file.
 ---
