@@ -110,11 +110,8 @@ public:
   }
 };
 
-long long delayCost(double a1, double b1, int k, vector<PACKAGE> _packages,
-                    vector<ULD> _ulds, Solution &sol) {
-  auto packages = _packages;
-  auto ulds = _ulds;
-
+long long delayCost(double a1, double b1, int k, vector<PACKAGE> packages,
+                    vector<ULD> ulds, Solution &sol) {
   for(auto p : packages) {
     sol.createPackageAssignment(p.packageIdentifier);
   }

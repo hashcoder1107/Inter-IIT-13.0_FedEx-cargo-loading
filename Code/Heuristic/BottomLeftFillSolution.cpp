@@ -51,12 +51,9 @@ int main() {
 
   int cost = delayCost(ALPHA, BETA, k, packages, ulds, solution);
 
-  if(solution.getValid() == true) {
-    cout << solution.toString() << endl;
-  } else {
-    cout << "Invalid Solution: " << endl;
-    cout << solution.toString() << endl;
-  }
+  //   cout << validate(k, packages, ulds, solution) << endl;
+
+  cout << solution.toString() << endl;
 
   return 0;
 }
